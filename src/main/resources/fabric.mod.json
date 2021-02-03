@@ -1,37 +1,31 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "floating_gui",
   "version": "${version}",
-
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Floating GUI",
+  "description": "Make GUIs float in the world",
   "authors": [
-    "Me!"
+    "eeasee"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/X-Green/FloatingGUIModMinecraft"
   },
-
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
-
+  "icon": "assets/floating_gui/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "dev.eeasee.floating_gui.FloatingGUIMod"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "mixins.floating_gui.json"
   ],
-
   "depends": {
-    "fabricloader": ">=0.7.4",
+    "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "1.16.x"
+    "minecraft": "1.15.x"
   },
   "suggests": {
-    "another-mod": "*"
   }
 }
