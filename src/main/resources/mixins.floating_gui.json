@@ -4,6 +4,8 @@
   "package": "dev.eeasee.floating_gui.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinChestBlockEntityRenderer",
+    "MixinWorldRenderer"
   ],
   "client": [
   ],
