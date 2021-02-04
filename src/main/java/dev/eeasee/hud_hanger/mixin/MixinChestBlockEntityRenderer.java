@@ -19,7 +19,6 @@ public class MixinChestBlockEntityRenderer<T extends BlockEntity & ChestAnimatio
     @Inject(method = "render", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"))
     private void afterPop(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, CallbackInfo ci) {
         matrices.translate(0, 1, 0);
-        HUDHangerMod.tellPlayer(String.valueOf(light));
         MinecraftClient.getInstance().getItemRenderer().renderItem(
                 null,
                 Items.REDSTONE_BLOCK.getStackForRender(),

@@ -1,6 +1,6 @@
 package dev.eeasee.hud_hanger.render;
 
-public enum UIType {
+public enum GUIType {
     CRAFTING_TABLE,
     INVENTORY,
     CHEST,

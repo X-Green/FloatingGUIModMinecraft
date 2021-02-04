@@ -5,15 +5,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.client.util.math.Matrix4f;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.client.util.math.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,7 +46,7 @@ public abstract class MixinWorldRenderer {
         VertexConsumerProvider.Immediate immediate = this.bufferBuilders.getEntityVertexConsumers();
 
         BlockPos blockPos = new BlockPos(-60, 78, -216);
-        Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+        Vec3d cameraPos = camera.getPos();
 
         float vx = blockPos.getX() - (float) cameraPos.x;
         float vy = blockPos.getY() - (float) cameraPos.y + 5;
@@ -73,7 +72,7 @@ public abstract class MixinWorldRenderer {
     @Inject(method = "render",
             at = @At(value = "INVOKE_STRING", args = "ldc=weather",
                     target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V"))
-    private void afterWorldBoarderRendered(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
+    private void onRenderWorldLast(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
 
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 
@@ -82,7 +81,7 @@ public abstract class MixinWorldRenderer {
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         RenderSystem.defaultBlendFunc();
-        this.textureManager.bindTexture(new Identifier("textures/item/apple.png"));
+
         RenderSystem.depthMask(false);
         RenderSystem.pushMatrix();
         RenderSystem.polygonOffset(-3.0F, -3.0F);
@@ -93,25 +92,35 @@ public abstract class MixinWorldRenderer {
 
         bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
 
+        this.textureManager.bindTexture(new Identifier("textures/gui/container/crafting_table.png"));
         BlockPos blockPos = new BlockPos(-60, 78, -216);
 
         float vx = blockPos.getX() - (float) cameraPos.x;
         float vy = blockPos.getY() - (float) cameraPos.y + 5;
         float vz = blockPos.getZ() - (float) cameraPos.z;
 
+        float yaw = 142.2f;
+        float pitch = -8.3f;
+
+        yaw = camera.getYaw();
+        pitch = camera.getPitch();
+
 
         Vector4f[] vector4f = new Vector4f[]{
-                new Vector4f(1, 2, 0, 1),
                 new Vector4f(1, 0, 0, 1),
                 new Vector4f(-1, 0, 0, 1),
                 new Vector4f(-1, 2, 0, 1),
+                new Vector4f(1, 2, 0, 1),
         };
 
-        Matrix4f rotation = new Matrix4f(new Quaternion(0, 0, 0, 1));
+        Matrix4f rotation = new Matrix4f(Vector3f.NEGATIVE_Y.getDegreesQuaternion(yaw));
+
+        rotation.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(pitch));
 
         Matrix4f translation = Matrix4f.translate(vx, vy, vz);
 
         for (Vector4f v : vector4f) {
+            v.transform(rotation);
             v.transform(translation);
         }
 

@@ -1,12 +1,12 @@
 package dev.eeasee.hud_hanger.render;
 
 import com.google.common.collect.Sets;
-import dev.eeasee.hud_hanger.render.ui.InWorldUIRenderer;
+import dev.eeasee.hud_hanger.render.ui.HungGUIRenderer;
 
 import java.util.Set;
 
 public class RenderManager {
-    private final Set<InWorldUIRenderer> activeInWorldUIRenderers = Sets.newHashSet();
+    private final Set<HungGUIRenderer> activeHungGUIRenderers = Sets.newHashSet();
 
     public RenderManager() {
 
@@ -21,7 +21,7 @@ public class RenderManager {
     }
 
     public static class Factory {
-        public InWorldUIRenderer of(UIType type) {
+        public HungGUIRenderer of(GUIType type) {
             switch (type) {
                 case CRAFTING_TABLE:
                     break;
