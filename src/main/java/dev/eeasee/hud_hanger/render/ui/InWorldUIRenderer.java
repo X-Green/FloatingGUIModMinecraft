@@ -1,13 +1,11 @@
-package dev.eeasee.floating_gui.render.in_world_UI_renderer;
+package dev.eeasee.hud_hanger.render.ui;
 
-import com.google.common.collect.Sets;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-
-import java.util.Set;
+import net.minecraft.util.math.Vec3d;
 
 public interface InWorldUIRenderer {
 
@@ -15,11 +13,21 @@ public interface InWorldUIRenderer {
 
     void setMouse(int x, int y);
 
-    int getUIWidth();
+    void setPos(Vec3d vec3d);
 
-    int getUIHeight();
+    void setFacing(float yaw, float pitch);
+
+    Vec3d getPos();
+
+    float getYRotationDegree();
 
     void render(MatrixStack matrices, float tickDelta, long limitTime, Camera camera, GameRenderer gameRenderer, Matrix4f matrix4f);
 
-    public static final Set<InWorldUIRenderer> ACTIVE_IN_GAME_INTERFACE_RENDERERS = Sets.newHashSet();
+    void renderBackground();
+
+    void renderItems();
+
+    void renderWidgets();
+
+
 }
