@@ -1,4 +1,4 @@
-package dev.eeasee.hud_hanger.render.ui;
+package dev.eeasee.hud_hanger.render.renderer;
 
 import net.minecraft.util.Identifier;
 

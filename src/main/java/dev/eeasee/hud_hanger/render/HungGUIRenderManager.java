@@ -1,18 +1,18 @@
 package dev.eeasee.hud_hanger.render;
 
-import com.google.common.collect.Sets;
-import dev.eeasee.hud_hanger.render.ui.HungGUIRenderer;
+import dev.eeasee.hud_hanger.render.renderer.HungGUIBaseRenderer;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-import java.util.Set;
+public class HungGUIRenderManager {
 
-public class RenderManager {
-    private final Set<HungGUIRenderer> activeHungGUIRenderers = Sets.newHashSet();
+    private final Int2ObjectMap<HungGUIBaseRenderer> activeHungGUIRenderers = new Int2ObjectOpenHashMap<>();
 
-    public RenderManager() {
+    public HungGUIRenderManager() {
 
     }
 
-    public void renderItems() {
+    public void renderModels() {
 
     }
 
@@ -21,7 +21,7 @@ public class RenderManager {
     }
 
     public static class Factory {
-        public HungGUIRenderer of(GUIType type) {
+        public HungGUIBaseRenderer of(GUIType type) {
             switch (type) {
                 case CRAFTING_TABLE:
                     break;

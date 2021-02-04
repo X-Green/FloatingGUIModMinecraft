@@ -1,6 +1,9 @@
 package dev.eeasee.hud_hanger.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.eeasee.hud_hanger.network.HUDHangerClient;
+import dev.eeasee.hud_hanger.render.HungGUIRenderManager;
+import dev.eeasee.hud_hanger.render.renderer.HungGUIBaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -12,7 +15,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,6 +49,9 @@ public abstract class MixinWorldRenderer {
 
         BlockPos blockPos = new BlockPos(-60, 78, -216);
         Vec3d cameraPos = camera.getPos();
+        // cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+        //todo: test if freecam affects this camera
+
 
         float vx = blockPos.getX() - (float) cameraPos.x;
         float vy = blockPos.getY() - (float) cameraPos.y + 5;
@@ -76,34 +81,27 @@ public abstract class MixinWorldRenderer {
 
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 
-        Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+        Vec3d cameraPos = camera.getPos();
+        // cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+        //todo: test if freecam affects this camera
 
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         RenderSystem.defaultBlendFunc();
-
         RenderSystem.depthMask(false);
-        RenderSystem.pushMatrix();
+        // RenderSystem.pushMatrix();
         RenderSystem.polygonOffset(-3.0F, -3.0F);
         RenderSystem.enablePolygonOffset();
         RenderSystem.enableAlphaTest();
         RenderSystem.disableCull();
 
-
         bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
 
         this.textureManager.bindTexture(new Identifier("textures/gui/container/crafting_table.png"));
-        BlockPos blockPos = new BlockPos(-60, 78, -216);
+        BlockPos blockPos = new BlockPos(-60, 83, -216);
 
-        float vx = blockPos.getX() - (float) cameraPos.x;
-        float vy = blockPos.getY() - (float) cameraPos.y + 5;
-        float vz = blockPos.getZ() - (float) cameraPos.z;
-
-        float yaw = 142.2f;
-        float pitch = -8.3f;
-
-        yaw = camera.getYaw();
-        pitch = camera.getPitch();
+        float yaw = camera.getYaw();
+        float pitch = camera.getPitch();
 
 
         Vector4f[] vector4f = new Vector4f[]{
@@ -113,26 +111,27 @@ public abstract class MixinWorldRenderer {
                 new Vector4f(1, 2, 0, 1),
         };
 
-        Matrix4f rotation = new Matrix4f(Vector3f.NEGATIVE_Y.getDegreesQuaternion(yaw));
+        Quaternion rotationQ = Vector3f.NEGATIVE_Y.getDegreesQuaternion(yaw);
+        rotationQ.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(pitch));
 
-        rotation.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(pitch));
 
-        Matrix4f translation = Matrix4f.translate(vx, vy, vz);
+        Matrix4f transformer1 = Matrix4f.translate((float) blockPos.getX(), (float) blockPos.getY(), (float) blockPos.getZ());
+        transformer1.multiply(rotationQ);
 
         for (Vector4f v : vector4f) {
-            v.transform(rotation);
-            v.transform(translation);
+            v.transform(transformer1);
         }
 
-        bufferBuilder.vertex(vector4f[0].getX(), vector4f[0].getY(), vector4f[0].getZ()).texture(0, 1).color(255, 255, 255, 255).next();
-        bufferBuilder.vertex(vector4f[1].getX(), vector4f[1].getY(), vector4f[1].getZ()).texture(1, 1).color(255, 255, 255, 255).next();
-        bufferBuilder.vertex(vector4f[2].getX(), vector4f[2].getY(), vector4f[2].getZ()).texture(1, 0).color(255, 255, 255, 255).next();
-        bufferBuilder.vertex(vector4f[3].getX(), vector4f[3].getY(), vector4f[3].getZ()).texture(0, 0).color(255, 255, 255, 255).next();
+        bufferBuilder.vertex(vector4f[0].getX() - cameraPos.x, vector4f[0].getY() - cameraPos.y, vector4f[0].getZ() - cameraPos.z).texture(0, 1).color(255, 255, 255, 255).next();
+        bufferBuilder.vertex(vector4f[1].getX() - cameraPos.x, vector4f[1].getY() - cameraPos.y, vector4f[1].getZ() - cameraPos.z).texture(1, 1).color(255, 255, 255, 255).next();
+        bufferBuilder.vertex(vector4f[2].getX() - cameraPos.x, vector4f[2].getY() - cameraPos.y, vector4f[2].getZ() - cameraPos.z).texture(1, 0).color(255, 255, 255, 255).next();
+        bufferBuilder.vertex(vector4f[3].getX() - cameraPos.x, vector4f[3].getY() - cameraPos.y, vector4f[3].getZ() - cameraPos.z).texture(0, 0).color(255, 255, 255, 255).next();
 
+        HUDHangerClient.getInstance().getManager().renderFaces();
 
         Tessellator.getInstance().draw();
 
-        RenderSystem.popMatrix();
+        // RenderSystem.popMatrix();
 
         RenderSystem.enableCull();
         RenderSystem.disableAlphaTest();
