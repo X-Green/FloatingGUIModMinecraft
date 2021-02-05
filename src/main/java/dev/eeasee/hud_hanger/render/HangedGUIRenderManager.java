@@ -9,11 +9,11 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class HungGUIRenderManager {
+public class HangedGUIRenderManager {
 
     private final Int2ObjectMap<HungGUIBaseRenderer> activeHungGUIRenderers = new Int2ObjectOpenHashMap<>();
 
-    public HungGUIRenderManager() {
+    public HangedGUIRenderManager() {
 
     }
 

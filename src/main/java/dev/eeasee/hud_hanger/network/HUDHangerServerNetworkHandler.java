@@ -1,5 +1,6 @@
 package dev.eeasee.hud_hanger.network;
 
+import dev.eeasee.hud_hanger.HUDHangerMod;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -33,14 +34,16 @@ public class HUDHangerServerNetworkHandler {
     }
 
     public void onPlayerJoin(ServerPlayerEntity playerEntity) {
+        PacketByteBuf buffer = (new PacketByteBuf(Unpooled.buffer()));
+        buffer.writeByte(HUDHangerClient.HI);
         playerEntity.networkHandler.sendPacket(new CustomPayloadS2CPacket(
-                HUDHangerClient.HUD_HANGER_CHANNEL,
-                (PacketByteBuf) (new PacketByteBuf(Unpooled.buffer())).writeByte(HUDHangerClient.HI)
+                HUDHangerClient.HUD_HANGER_CHANNEL, buffer
         ));
     }
 
     public void onHello(ServerPlayerEntity playerEntity, PacketByteBuf packetData) {
         this.validPlayers.add(playerEntity.getUuid());
+        HUDHangerMod.LOGGER.info(playerEntity.getNameAndUuid() + "logged in with HUDHanger Client");
     }
 
     private void onClientData(ServerPlayerEntity player, PacketByteBuf data) {

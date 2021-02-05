@@ -29,7 +29,7 @@ public class MixinServerPlayNetworkHandler {
     private void onCustomCarpetPayload(CustomPayloadC2SPacket packet, CallbackInfo ci) {
         Identifier channel = ((CustomPayloadC2SPacketInterface) packet).getPacketChannel();
         if (HUDHangerClient.HUD_HANGER_CHANNEL.equals(channel)) {
-            ((IMinecraftServer) this.server).getHUDHangerServer().networkHandler.handleData(((CustomPayloadC2SPacketInterface) packet).getPacketData(), player);
+            ((IMinecraftServer) (MinecraftServer) this.server).getHUDHangerServer().networkHandler.handleData(((CustomPayloadC2SPacketInterface) packet).getPacketData(), player);
             ci.cancel();
         }
     }

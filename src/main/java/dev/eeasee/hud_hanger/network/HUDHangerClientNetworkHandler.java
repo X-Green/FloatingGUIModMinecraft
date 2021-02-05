@@ -1,5 +1,6 @@
 package dev.eeasee.hud_hanger.network;
 
+import dev.eeasee.hud_hanger.HUDHangerMod;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -19,11 +20,9 @@ public class HUDHangerClientNetworkHandler {
     }
 
     private static void onHi(PacketByteBuf data) {
-        synchronized (HUDHangerClient.sync) {
-            HUDHangerClient.isServerSupported = true;
-            if (MinecraftClient.getInstance().player != null) {
-                respondHello(MinecraftClient.getInstance().player);
-            }
+        HUDHangerClient.isServerSupported = true;
+        if (MinecraftClient.getInstance().player != null) {
+            respondHello(MinecraftClient.getInstance().player);
         }
     }
 
@@ -32,6 +31,7 @@ public class HUDHangerClientNetworkHandler {
         buffer.writeByte(HUDHangerClient.HELLO);
         clientPlayerEntity.networkHandler.sendPacket(new CustomPayloadC2SPacket(
                 HUDHangerClient.HUD_HANGER_CHANNEL, buffer));
+        HUDHangerMod.LOGGER.info("Connected to a HUDHanger Server");
     }
 
     private static void onSyncData(PacketByteBuf data) {

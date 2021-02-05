@@ -21,6 +21,6 @@ public class MixinPlayerManager {
 
     @Inject(method = "onPlayerConnect", at = @At("RETURN"))
     private void onPlayerConnected(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
-        ((IMinecraftServer) this.server).getHUDHangerServer().networkHandler.onPlayerJoin(player);
+        ((IMinecraftServer) (MinecraftServer) this.server).getHUDHangerServer().networkHandler.onPlayerJoin(player);
     }
 }
