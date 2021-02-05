@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(CustomPayloadC2SPacket.class)
-public class MixinCustomPayloadC2SPacket implements CustomPayloadC2SPacketInterface {
+public abstract class MixinCustomPayloadC2SPacket implements CustomPayloadC2SPacketInterface {
     @Shadow
     private Identifier channel;
     @Shadow

@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class MixinServerPlayNetworkHandler {
+public abstract class MixinServerPlayNetworkHandler {
     @Shadow
     public ServerPlayerEntity player;
 

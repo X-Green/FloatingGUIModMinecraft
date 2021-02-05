@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier;
 
 public class HUDHangerClient {
     public static final Object sync = new Object();
+    public static boolean gameJoined = false;
     public static boolean isServerSupported = false;
     public static final Identifier HUD_HANGER_CHANNEL = new Identifier("h_h:c");
     public static HangedGUIRenderManager renderManager = new HangedGUIRenderManager();
@@ -21,10 +22,11 @@ public class HUDHangerClient {
             if (isServerSupported && MINECRAFT_CLIENT.player != null) {
                 HUDHangerClientNetworkHandler.respondHello(MINECRAFT_CLIENT.player);
             }
+            gameJoined = true;
         }
     }
 
     public static void disconnect() {
-
+        gameJoined = false;
     }
 }

@@ -4,14 +4,14 @@
   "package": "dev.eeasee.hud_hanger.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinClientPlayNetworkHandler",
     "MixinCustomPayloadC2SPacket",
     "MixinMinecraftServer",
     "MixinPlayerManager",
-    "MixinServerPlayNetworkHandler",
-    "MixinWorldRenderer"
+    "MixinServerPlayNetworkHandler"
   ],
   "client": [
+    "ClientMixinClientPlayNetworkHandler",
+    "ClientMixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldRenderer.class)
-public abstract class MixinWorldRenderer {
+public abstract class ClientMixinWorldRenderer {
     @Shadow
     @Final
     private BufferBuilderStorage bufferBuilders;
@@ -48,9 +48,6 @@ public abstract class MixinWorldRenderer {
 
         BlockPos blockPos = new BlockPos(-60, 78, -216);
         Vec3d cameraPos = camera.getPos();
-        // cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-        //todo: test if freecam affects this camera
-
 
         float vx = blockPos.getX() - (float) cameraPos.x;
         float vy = blockPos.getY() - (float) cameraPos.y + 5;
@@ -59,9 +56,11 @@ public abstract class MixinWorldRenderer {
         matrices.push();
         matrices.translate(vx, vy + 10, vz);
 
+        Quaternion rotationQ = Vector3f.NEGATIVE_Y.getDegreesQuaternion(camera.getYaw());
+        rotationQ.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(camera.getPitch()));
+        rotationQ.hamiltonProduct(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0f));
 
-        Quaternion rotationQ = Vector3f.NEGATIVE_Y.getDegreesQuaternion(-camera.getYaw());
-        rotationQ.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(-camera.getPitch()));
+        matrices.push();
         matrices.multiply(rotationQ);
 
         MinecraftClient.getInstance().getItemRenderer().renderItem(
@@ -72,12 +71,30 @@ public abstract class MixinWorldRenderer {
                 matrices,
                 immediate,
                 null,
-                0x00F000F0,
+                0x00f000f0,
                 OverlayTexture.DEFAULT_UV
         );
+
+        matrices.pop();
+        matrices.push();
+
+        matrices.translate(5, 0, 0);
+
+        matrices.multiply(rotationQ);
+        MinecraftClient.getInstance().getItemRenderer().renderItem(
+                Items.DIAMOND.getStackForRender(),
+                ModelTransformation.Mode.GUI,
+                0x00f000f0,
+                OverlayTexture.DEFAULT_UV,
+                matrices,
+                immediate
+        );
+
+        matrices.pop();
         matrices.pop();
 
         HUDHangerClient.renderManager.renderModels(matrices, tickDelta, camera, gameRenderer);
+
 
     }
 

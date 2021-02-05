@@ -22,7 +22,7 @@ import java.net.Proxy;
 import java.util.function.BooleanSupplier;
 
 @Mixin(MinecraftServer.class)
-public class MixinMinecraftServer implements IMinecraftServer {
+public abstract class MixinMinecraftServer implements IMinecraftServer {
     private HUDHangerServer hudHangerServer;
 
     @Inject(

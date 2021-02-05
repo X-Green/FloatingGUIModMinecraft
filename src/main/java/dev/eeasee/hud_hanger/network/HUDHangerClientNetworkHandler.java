@@ -23,6 +23,9 @@ public class HUDHangerClientNetworkHandler {
     private static void onHi(PacketByteBuf data) {
         synchronized (HUDHangerClient.sync) {
             HUDHangerClient.isServerSupported = true;
+            if (HUDHangerClient.gameJoined) {
+                respondHello(MinecraftClient.getInstance().player);
+            }
         }
     }
 

@@ -11,6 +11,9 @@ import net.minecraft.util.math.Vec3d;
 
 public abstract class HungGUIBaseRenderer {
 
+    protected int mouseX = -1;
+    protected int mouseY = -1;
+
     protected float yaw = 0.0f;
     protected float pitch = 0.0f;
     protected Quaternion rotation = new Quaternion(0, 0, 0, 1);
@@ -71,6 +74,14 @@ public abstract class HungGUIBaseRenderer {
         return this.pitch;
     }
 
+    public int getMouseX() {
+        return this.mouseX;
+    }
+
+    public int getMouseY() {
+        return this.mouseY;
+    }
+
     public Quaternion getRotation() {
         return this.rotation;
     }
@@ -85,10 +96,15 @@ public abstract class HungGUIBaseRenderer {
 
     public abstract void renderItems();
 
+    public void renderMouse(float tickDelta, Camera camera, GameRenderer gameRenderer, Matrix4f matrix4f) {
+
+    }
+
     public void renderFlat(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer) {
         matrices.push();
         this.renderBackground(tickDelta, camera, gameRenderer, this.getTransformer());
         this.renderWidgets(tickDelta, camera, gameRenderer, this.getTransformer());
+        this.renderMouse(tickDelta, camera, gameRenderer, this.getTransformer());
         matrices.pop();
     }
 
