@@ -43,7 +43,7 @@ public class HUDHangerServerNetworkHandler {
 
     public void onHello(ServerPlayerEntity playerEntity, PacketByteBuf packetData) {
         this.validPlayers.add(playerEntity.getUuid());
-        HUDHangerMod.LOGGER.info(playerEntity.getNameAndUuid() + "logged in with HUDHanger Client");
+        HUDHangerMod.LOGGER.info(playerEntity.getNameAndUuid().asString() + "logged in with HUDHanger Client");
     }
 
     private void onClientData(ServerPlayerEntity player, PacketByteBuf data) {

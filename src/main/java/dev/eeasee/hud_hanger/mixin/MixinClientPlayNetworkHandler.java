@@ -14,29 +14,25 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetworkHandler.class)
-public abstract class MixinClientPlayNetworkHandler
-{
-    @Shadow private MinecraftClient client;
+public abstract class MixinClientPlayNetworkHandler {
+    @Shadow
+    private MinecraftClient client;
 
     @Inject(method = "onCustomPayload", at = @At("HEAD"), cancellable = true)
-    private void onOnCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci)
-    {
-        if (HUDHangerClient.HUD_HANGER_CHANNEL.equals(packet.getChannel()))
-        {
+    private void onOnCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
+        if (HUDHangerClient.HUD_HANGER_CHANNEL.equals(packet.getChannel())) {
             HUDHangerClientNetworkHandler.handleData(packet.getData());
             ci.cancel();
         }
     }
 
     @Inject(method = "onGameJoin", at = @At("RETURN"))
-    private void onGameJoined(GameJoinS2CPacket packet, CallbackInfo info)
-    {
+    private void onGameJoined(GameJoinS2CPacket packet, CallbackInfo info) {
         HUDHangerClient.gameJoined();
     }
 
     @Inject(method = "onDisconnected", at = @At("HEAD"))
-    private void onCMDisconnected(Text reason, CallbackInfo ci)
-    {
+    private void onCMDisconnected(Text reason, CallbackInfo ci) {
         HUDHangerClient.disconnect();
     }
 

@@ -1,7 +1,6 @@
 package dev.eeasee.hud_hanger.mixin;
 
 import dev.eeasee.hud_hanger.fakes.IMinecraftServer;
-import dev.eeasee.hud_hanger.network.HUDHangerServer;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
@@ -21,6 +20,6 @@ public class MixinPlayerManager {
 
     @Inject(method = "onPlayerConnect", at = @At("RETURN"))
     private void onPlayerConnected(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
-        ((IMinecraftServer) (MinecraftServer) this.server).getHUDHangerServer().networkHandler.onPlayerJoin(player);
+        ((IMinecraftServer) this.server).getHUDHangerServer().networkHandler.onPlayerJoin(player);
     }
 }

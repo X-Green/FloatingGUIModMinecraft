@@ -12,6 +12,7 @@ public class HUDHangerClientNetworkHandler {
     public static void handleData(PacketByteBuf data) {
         if (data != null) {
             byte id = data.readByte();
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!id=" + id);
             if (id == HUDHangerClient.HI)
                 onHi(data);
             if (id == HUDHangerClient.DATA)
@@ -20,9 +21,8 @@ public class HUDHangerClientNetworkHandler {
     }
 
     private static void onHi(PacketByteBuf data) {
-        HUDHangerClient.isServerSupported = true;
-        if (MinecraftClient.getInstance().player != null) {
-            respondHello(MinecraftClient.getInstance().player);
+        synchronized (HUDHangerClient.sync) {
+            HUDHangerClient.isServerSupported = true;
         }
     }
 
