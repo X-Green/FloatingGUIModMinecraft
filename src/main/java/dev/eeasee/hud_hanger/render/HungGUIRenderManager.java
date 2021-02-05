@@ -3,6 +3,11 @@ package dev.eeasee.hud_hanger.render;
 import dev.eeasee.hud_hanger.render.renderer.HungGUIBaseRenderer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.client.util.math.MatrixStack;
 
 public class HungGUIRenderManager {
 
@@ -12,12 +17,16 @@ public class HungGUIRenderManager {
 
     }
 
-    public void renderModels() {
-
+    public void renderModels(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer) {
+        for (HungGUIBaseRenderer renderer : activeHungGUIRenderers.values()) {
+            renderer.renderModels(matrices, tickDelta, camera, gameRenderer);
+        }
     }
 
-    public void renderFaces() {
-
+    public void renderFlat(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer) {
+        for (HungGUIBaseRenderer renderer : activeHungGUIRenderers.values()) {
+            renderer.renderFlat(matrices, tickDelta, camera, gameRenderer);
+        }
     }
 
     public static class Factory {

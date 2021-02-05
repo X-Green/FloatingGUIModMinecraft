@@ -85,19 +85,20 @@ public abstract class HungGUIBaseRenderer {
 
     public abstract void renderItems();
 
-    public void renderFlat(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer, Matrix4f matrix4f) {
+    public void renderFlat(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer) {
         matrices.push();
         this.renderBackground(tickDelta, camera, gameRenderer, this.getTransformer());
         this.renderWidgets(tickDelta, camera, gameRenderer, this.getTransformer());
         matrices.pop();
     }
 
-    public void renderModels() {
+    public void renderModels(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer) {
+
     }
 
     protected void updateRotationQuaternion() {
-        this.rotation = Vector3f.NEGATIVE_Y.getDegreesQuaternion(yaw);
-        rotation.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(pitch));
+        this.rotation = Vector3f.NEGATIVE_Y.getDegreesQuaternion(this.getYaw());
+        rotation.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(this.getPitch()));
     }
 
     protected void updateTransformingMatrix4f() {

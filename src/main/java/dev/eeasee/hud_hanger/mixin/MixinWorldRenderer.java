@@ -1,9 +1,8 @@
 package dev.eeasee.hud_hanger.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.eeasee.hud_hanger.HUDHangerMod;
 import dev.eeasee.hud_hanger.network.HUDHangerClient;
-import dev.eeasee.hud_hanger.render.HungGUIRenderManager;
-import dev.eeasee.hud_hanger.render.renderer.HungGUIBaseRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -59,10 +58,16 @@ public abstract class MixinWorldRenderer {
 
         matrices.push();
         matrices.translate(vx, vy + 10, vz);
+
+
+        Quaternion rotationQ = Vector3f.NEGATIVE_Y.getDegreesQuaternion(-camera.getYaw());
+        rotationQ.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(-camera.getPitch()));
+        matrices.multiply(rotationQ);
+
         MinecraftClient.getInstance().getItemRenderer().renderItem(
                 null,
                 Items.JACK_O_LANTERN.getStackForRender(),
-                ModelTransformation.Mode.GROUND,
+                ModelTransformation.Mode.GUI,
                 false,
                 matrices,
                 immediate,
@@ -71,6 +76,8 @@ public abstract class MixinWorldRenderer {
                 OverlayTexture.DEFAULT_UV
         );
         matrices.pop();
+
+        HUDHangerClient.renderManager.renderModels(matrices, tickDelta, camera, gameRenderer);
 
     }
 
@@ -127,12 +134,10 @@ public abstract class MixinWorldRenderer {
         bufferBuilder.vertex(vector4f[2].getX() - cameraPos.x, vector4f[2].getY() - cameraPos.y, vector4f[2].getZ() - cameraPos.z).texture(1, 0).color(255, 255, 255, 255).next();
         bufferBuilder.vertex(vector4f[3].getX() - cameraPos.x, vector4f[3].getY() - cameraPos.y, vector4f[3].getZ() - cameraPos.z).texture(0, 0).color(255, 255, 255, 255).next();
 
-        HUDHangerClient.getInstance().getManager().renderFaces();
+        HUDHangerClient.renderManager.renderFlat(matrices, tickDelta, camera, gameRenderer);
 
         Tessellator.getInstance().draw();
-
         // RenderSystem.popMatrix();
-
         RenderSystem.enableCull();
         RenderSystem.disableAlphaTest();
         RenderSystem.polygonOffset(0.0F, 0.0F);

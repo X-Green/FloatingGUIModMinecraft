@@ -4,7 +4,6 @@
   "package": "dev.eeasee.hud_hanger.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinChestBlockEntityRenderer",
     "MixinWorldRenderer"
   ],
   "client": [

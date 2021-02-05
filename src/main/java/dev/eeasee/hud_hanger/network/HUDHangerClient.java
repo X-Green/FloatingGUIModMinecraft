@@ -1,21 +1,27 @@
 package dev.eeasee.hud_hanger.network;
 
 import dev.eeasee.hud_hanger.render.HungGUIRenderManager;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.util.Identifier;
 
 public class HUDHangerClient {
-    private static HUDHangerClient instance = new HUDHangerClient();
+    public static final Object sync = new Object();
+    public static ClientPlayerEntity clientPlayer = null;
+    public static boolean isServerSupported = false;
+    public static final Identifier HUD_HANGER_CHANNEL = new Identifier("h_h:c");
+    public static HungGUIRenderManager renderManager = new HungGUIRenderManager();
+    private static final MinecraftClient MINECRAFT_CLIENT = MinecraftClient.getInstance();
 
-    public static HUDHangerClient getInstance() {
-        return instance;
+    public static final byte HI = 69;
+    public static final byte HELLO = 111;
+    public static final byte DATA = 1;
+
+    public static void gameJoined() {
+
     }
 
-    private HUDHangerClient() {
+    public static void disconnect() {
 
-    }
-
-    private HungGUIRenderManager renderManager = new HungGUIRenderManager();
-
-    public HungGUIRenderManager getManager() {
-        return this.renderManager;
     }
 }

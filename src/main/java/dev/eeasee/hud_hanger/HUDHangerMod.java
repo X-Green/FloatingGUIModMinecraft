@@ -3,8 +3,13 @@ package dev.eeasee.hud_hanger;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class HUDHangerMod implements ModInitializer {
+
+    public static final Logger LOGGER = LogManager.getLogger();
+
     @Override
     public void onInitialize() {
         System.out.println("Reeeeee!");
