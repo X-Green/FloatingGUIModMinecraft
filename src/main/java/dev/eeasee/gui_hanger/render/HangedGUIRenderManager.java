@@ -1,34 +1,31 @@
 package dev.eeasee.gui_hanger.render;
 
-import dev.eeasee.gui_hanger.render.renderer.HungGUIBaseRenderer;
+import dev.eeasee.gui_hanger.render.renderer.GUIRendererBase;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class HangedGUIRenderManager {
 
-    private final Int2ObjectMap<HungGUIBaseRenderer> activeHungGUIRenderers = new Int2ObjectOpenHashMap<>();
+    public static final Int2ObjectMap<GUIRendererBase> ACTIVE_HUNG_GUI_RENDERERS = new Int2ObjectOpenHashMap<>();
 
-    public HangedGUIRenderManager() {
-
-    }
-
-    public void renderModels(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer) {
-        for (HungGUIBaseRenderer renderer : activeHungGUIRenderers.values()) {
-            renderer.renderModels(matrices, tickDelta, camera, gameRenderer);
+    public static void renderModels(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer, TextureManager textureManager) {
+        for (GUIRendererBase renderer : ACTIVE_HUNG_GUI_RENDERERS.values()) {
+            renderer.renderModels(matrices, tickDelta, camera, gameRenderer, textureManager);
         }
     }
 
-    public void renderFlat(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer) {
-        for (HungGUIBaseRenderer renderer : activeHungGUIRenderers.values()) {
-            renderer.renderFlat(matrices, tickDelta, camera, gameRenderer);
+    public static void renderFlat(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer, TextureManager textureManager) {
+        for (GUIRendererBase renderer : ACTIVE_HUNG_GUI_RENDERERS.values()) {
+            renderer.renderFlat(matrices, tickDelta, camera, gameRenderer, textureManager);
         }
     }
 
     public static class Factory {
-        public HungGUIBaseRenderer of(GUIType type) {
+        public GUIRendererBase of(GUIType type) {
             switch (type) {
                 case CRAFTING_TABLE:
                     break;

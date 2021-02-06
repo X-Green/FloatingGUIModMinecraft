@@ -9,7 +9,6 @@ public class GUIHangerClient {
     public static boolean gameJoined = false;
     public static boolean isServerSupported = false;
     public static final Identifier HUD_HANGER_CHANNEL = new Identifier("h_h:c");
-    public static HangedGUIRenderManager renderManager = new HangedGUIRenderManager();
     private static final MinecraftClient MINECRAFT_CLIENT = MinecraftClient.getInstance();
 
     public static final byte HI = 69;

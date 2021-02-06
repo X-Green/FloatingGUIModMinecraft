@@ -2,6 +2,8 @@ package dev.eeasee.gui_hanger.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.eeasee.gui_hanger.network.GUIHangerClient;
+import dev.eeasee.gui_hanger.render.HangedGUIRenderManager;
+import dev.eeasee.gui_hanger.render.renderer.CraftingTableRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -100,7 +102,7 @@ public abstract class ClientMixinWorldRenderer {
         matrices.pop();
         matrices.pop();
 
-        GUIHangerClient.renderManager.renderModels(matrices, tickDelta, camera, gameRenderer);
+        HangedGUIRenderManager.renderModels(matrices, tickDelta, camera, gameRenderer, this.textureManager);
 
 
     }
@@ -117,7 +119,6 @@ public abstract class ClientMixinWorldRenderer {
         RenderSystem.enableDepthTest();
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(false);
-        // RenderSystem.pushMatrix();
         RenderSystem.polygonOffset(-3.0F, -3.0F);
         RenderSystem.enablePolygonOffset();
         RenderSystem.enableAlphaTest();
@@ -150,14 +151,23 @@ public abstract class ClientMixinWorldRenderer {
             v.transform(transformer1);
         }
 
+        /*
         bufferBuilder.vertex(vector4f[0].getX() - cameraPos.x, vector4f[0].getY() - cameraPos.y, vector4f[0].getZ() - cameraPos.z).texture(0, 1).color(255, 255, 255, 255).next();
         bufferBuilder.vertex(vector4f[1].getX() - cameraPos.x, vector4f[1].getY() - cameraPos.y, vector4f[1].getZ() - cameraPos.z).texture(1, 1).color(255, 255, 255, 255).next();
         bufferBuilder.vertex(vector4f[2].getX() - cameraPos.x, vector4f[2].getY() - cameraPos.y, vector4f[2].getZ() - cameraPos.z).texture(1, 0).color(255, 255, 255, 255).next();
         bufferBuilder.vertex(vector4f[3].getX() - cameraPos.x, vector4f[3].getY() - cameraPos.y, vector4f[3].getZ() - cameraPos.z).texture(0, 0).color(255, 255, 255, 255).next();
+         */
 
-        GUIHangerClient.renderManager.renderFlat(matrices, tickDelta, camera, gameRenderer);
+        bufferBuilder.vertex(vector4f[0].getX() - cameraPos.x, vector4f[0].getY() - cameraPos.y, vector4f[0].getZ() - cameraPos.z).texture(CraftingTableRenderer.BG_TEX_UV.vectors[0].x, CraftingTableRenderer.BG_TEX_UV.vectors[0].y).color(255, 255, 255, 255).next();
+        bufferBuilder.vertex(vector4f[1].getX() - cameraPos.x, vector4f[1].getY() - cameraPos.y, vector4f[1].getZ() - cameraPos.z).texture(CraftingTableRenderer.BG_TEX_UV.vectors[1].x, CraftingTableRenderer.BG_TEX_UV.vectors[1].y).color(255, 255, 255, 255).next();
+        bufferBuilder.vertex(vector4f[2].getX() - cameraPos.x, vector4f[2].getY() - cameraPos.y, vector4f[2].getZ() - cameraPos.z).texture(CraftingTableRenderer.BG_TEX_UV.vectors[2].x, CraftingTableRenderer.BG_TEX_UV.vectors[2].y).color(255, 255, 255, 255).next();
+        bufferBuilder.vertex(vector4f[3].getX() - cameraPos.x, vector4f[3].getY() - cameraPos.y, vector4f[3].getZ() - cameraPos.z).texture(CraftingTableRenderer.BG_TEX_UV.vectors[3].x, CraftingTableRenderer.BG_TEX_UV.vectors[3].y).color(255, 255, 255, 255).next();
 
         Tessellator.getInstance().draw();
+
+
+        HangedGUIRenderManager.renderFlat(matrices, tickDelta, camera, gameRenderer, this.textureManager);
+
         // RenderSystem.popMatrix();
         RenderSystem.enableCull();
         RenderSystem.disableAlphaTest();
@@ -166,6 +176,9 @@ public abstract class ClientMixinWorldRenderer {
         RenderSystem.enableAlphaTest();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
+
+        //todo: del this
+        HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).setYawPitch(camera.getYaw(), camera.getPitch());
 
     }
 }
