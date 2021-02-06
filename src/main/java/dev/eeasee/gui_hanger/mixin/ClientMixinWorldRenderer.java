@@ -1,8 +1,7 @@
-package dev.eeasee.hud_hanger.mixin;
+package dev.eeasee.gui_hanger.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.eeasee.hud_hanger.HUDHangerMod;
-import dev.eeasee.hud_hanger.network.HUDHangerClient;
+import dev.eeasee.gui_hanger.network.GUIHangerClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -39,8 +38,10 @@ public abstract class ClientMixinWorldRenderer {
     @Shadow
     private ClientWorld world;
 
-    @Shadow
-    protected abstract void method_22978(BufferBuilder bufferBuilder, double d, double e, double f, double g, int i, double h, float j, float k);
+    @Inject(method = "render", at = @At("HEAD"))
+    private void beforeRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
+
+    }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Ljava/lang/Iterable;iterator()Ljava/util/Iterator;", shift = At.Shift.AFTER))
     private void beforeBlockEntityRendered(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
@@ -56,9 +57,15 @@ public abstract class ClientMixinWorldRenderer {
         matrices.push();
         matrices.translate(vx, vy + 10, vz);
 
-        Quaternion rotationQ = Vector3f.NEGATIVE_Y.getDegreesQuaternion(camera.getYaw());
-        rotationQ.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(camera.getPitch()));
-        rotationQ.hamiltonProduct(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0f));
+        float yaw = camera.getYaw();
+        float pitch = camera.getPitch();
+
+        Quaternion rotationYawPitch = Vector3f.NEGATIVE_Y.getDegreesQuaternion(yaw);
+        rotationYawPitch.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(pitch));
+
+        Quaternion rotationQ = Vector3f.NEGATIVE_Y.getDegreesQuaternion(yaw);
+        rotationQ.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(pitch));
+        rotationQ.hamiltonProduct(Vector3f.POSITIVE_Y.getDegreesQuaternion(180));
 
         matrices.push();
         matrices.multiply(rotationQ);
@@ -93,7 +100,7 @@ public abstract class ClientMixinWorldRenderer {
         matrices.pop();
         matrices.pop();
 
-        HUDHangerClient.renderManager.renderModels(matrices, tickDelta, camera, gameRenderer);
+        GUIHangerClient.renderManager.renderModels(matrices, tickDelta, camera, gameRenderer);
 
 
     }
@@ -106,9 +113,6 @@ public abstract class ClientMixinWorldRenderer {
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 
         Vec3d cameraPos = camera.getPos();
-        // cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
-        //todo: test if freecam affects this camera
-
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         RenderSystem.defaultBlendFunc();
@@ -129,15 +133,15 @@ public abstract class ClientMixinWorldRenderer {
 
 
         Vector4f[] vector4f = new Vector4f[]{
-                new Vector4f(1, 0, 0, 1),
                 new Vector4f(-1, 0, 0, 1),
-                new Vector4f(-1, 2, 0, 1),
+                new Vector4f(1, 0, 0, 1),
                 new Vector4f(1, 2, 0, 1),
+                new Vector4f(-1, 2, 0, 1),
         };
 
         Quaternion rotationQ = Vector3f.NEGATIVE_Y.getDegreesQuaternion(yaw);
         rotationQ.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(pitch));
-
+        rotationQ.hamiltonProduct(Vector3f.POSITIVE_Y.getDegreesQuaternion(180));
 
         Matrix4f transformer1 = Matrix4f.translate((float) blockPos.getX(), (float) blockPos.getY(), (float) blockPos.getZ());
         transformer1.multiply(rotationQ);
@@ -151,7 +155,7 @@ public abstract class ClientMixinWorldRenderer {
         bufferBuilder.vertex(vector4f[2].getX() - cameraPos.x, vector4f[2].getY() - cameraPos.y, vector4f[2].getZ() - cameraPos.z).texture(1, 0).color(255, 255, 255, 255).next();
         bufferBuilder.vertex(vector4f[3].getX() - cameraPos.x, vector4f[3].getY() - cameraPos.y, vector4f[3].getZ() - cameraPos.z).texture(0, 0).color(255, 255, 255, 255).next();
 
-        HUDHangerClient.renderManager.renderFlat(matrices, tickDelta, camera, gameRenderer);
+        GUIHangerClient.renderManager.renderFlat(matrices, tickDelta, camera, gameRenderer);
 
         Tessellator.getInstance().draw();
         // RenderSystem.popMatrix();

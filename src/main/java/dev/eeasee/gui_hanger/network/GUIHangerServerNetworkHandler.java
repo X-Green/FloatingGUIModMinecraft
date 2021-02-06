@@ -1,6 +1,6 @@
-package dev.eeasee.hud_hanger.network;
+package dev.eeasee.gui_hanger.network;
 
-import dev.eeasee.hud_hanger.HUDHangerMod;
+import dev.eeasee.gui_hanger.GUIHangerMod;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -14,36 +14,36 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class HUDHangerServerNetworkHandler {
+public class GUIHangerServerNetworkHandler {
     private Set<UUID> validPlayers = new HashSet<>();
 
     private final MinecraftServer minecraftServer;
 
-    HUDHangerServerNetworkHandler(MinecraftServer minecraftServer) {
+    GUIHangerServerNetworkHandler(MinecraftServer minecraftServer) {
         this.minecraftServer = minecraftServer;
     }
 
     public void handleData(PacketByteBuf data, ServerPlayerEntity player) {
         if (data != null) {
             byte id = data.readByte();
-            if (id == HUDHangerClient.HELLO)
+            if (id == GUIHangerClient.HELLO)
                 this.onHello(player, data);
-            if (id == HUDHangerClient.DATA)
+            if (id == GUIHangerClient.DATA)
                 this.onClientData(player, data);
         }
     }
 
     public void onPlayerJoin(ServerPlayerEntity playerEntity) {
         PacketByteBuf buffer = (new PacketByteBuf(Unpooled.buffer()));
-        buffer.writeByte(HUDHangerClient.HI);
+        buffer.writeByte(GUIHangerClient.HI);
         playerEntity.networkHandler.sendPacket(new CustomPayloadS2CPacket(
-                HUDHangerClient.HUD_HANGER_CHANNEL, buffer
+                GUIHangerClient.HUD_HANGER_CHANNEL, buffer
         ));
     }
 
     public void onHello(ServerPlayerEntity playerEntity, PacketByteBuf packetData) {
         this.validPlayers.add(playerEntity.getUuid());
-        HUDHangerMod.LOGGER.info(playerEntity.getNameAndUuid().asString() + "logged in with HUDHanger Client");
+        GUIHangerMod.LOGGER.info(playerEntity.getNameAndUuid().asString() + "logged in with HUDHanger Client");
     }
 
     private void onClientData(ServerPlayerEntity player, PacketByteBuf data) {

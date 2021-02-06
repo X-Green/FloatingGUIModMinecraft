@@ -1,4 +1,4 @@
-package dev.eeasee.hud_hanger.network;
+package dev.eeasee.gui_hanger.network;
 
 import net.minecraft.util.PacketByteBuf;
 

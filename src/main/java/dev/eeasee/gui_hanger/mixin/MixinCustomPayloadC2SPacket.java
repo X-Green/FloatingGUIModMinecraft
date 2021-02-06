@@ -1,6 +1,6 @@
-package dev.eeasee.hud_hanger.mixin;
+package dev.eeasee.gui_hanger.mixin;
 
-import dev.eeasee.hud_hanger.fakes.CustomPayloadC2SPacketInterface;
+import dev.eeasee.gui_hanger.fakes.CustomPayloadC2SPacketInterface;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;

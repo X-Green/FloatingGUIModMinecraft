@@ -1,6 +1,6 @@
-package dev.eeasee.hud_hanger.render;
+package dev.eeasee.gui_hanger.render;
 
-import dev.eeasee.hud_hanger.render.renderer.HungGUIBaseRenderer;
+import dev.eeasee.gui_hanger.render.renderer.HungGUIBaseRenderer;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.render.Camera;

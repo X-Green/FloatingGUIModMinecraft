@@ -1,29 +1,28 @@
 {
   "schemaVersion": 1,
-  "id": "hud_hanger",
+  "id": "gui_hanger",
   "version": "${version}",
-  "name": "HUD Hanger",
+  "name": "GUI Hanger",
   "description": "Make GUIs float in the world",
   "authors": [
     "eeasee"
   ],
   "contact": {
-    "sources": "https://github.com/X-Green/HUDHangerModMinecraft"
+    "sources": "https://github.com/X-Green/GUIHangerModMinecraft"
   },
   "license": "CC0-1.0",
-  "icon": "assets/hud_hanger/icon.png",
+  "icon": "assets/gui_hanger/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.eeasee.hud_hanger.HUDHangerMod"
+      "dev.eeasee.gui_hanger.GUIHangerMod"
     ]
   },
   "mixins": [
-    "mixins.hud_hanger.json"
+    "mixins.gui_hanger.json"
   ],
   "depends": {
     "fabricloader": "*",
-    "fabric": "*",
     "minecraft": "1.15.x"
   },
   "suggests": {

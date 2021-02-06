@@ -1,10 +1,10 @@
-package dev.eeasee.hud_hanger.network;
+package dev.eeasee.gui_hanger.network;
 
-import dev.eeasee.hud_hanger.render.HangedGUIRenderManager;
+import dev.eeasee.gui_hanger.render.HangedGUIRenderManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
-public class HUDHangerClient {
+public class GUIHangerClient {
     public static final Object sync = new Object();
     public static boolean gameJoined = false;
     public static boolean isServerSupported = false;
@@ -20,7 +20,7 @@ public class HUDHangerClient {
         synchronized (sync) {
             // client didn't say hi back yet
             if (isServerSupported && MINECRAFT_CLIENT.player != null) {
-                HUDHangerClientNetworkHandler.respondHello(MINECRAFT_CLIENT.player);
+                GUIHangerClientNetworkHandler.respondHello(MINECRAFT_CLIENT.player);
             }
             gameJoined = true;
         }

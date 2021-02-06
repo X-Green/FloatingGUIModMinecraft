@@ -1,40 +1,42 @@
-package dev.eeasee.hud_hanger.network;
+package dev.eeasee.gui_hanger.network;
 
-import dev.eeasee.hud_hanger.HUDHangerMod;
+import dev.eeasee.gui_hanger.GUIHangerMod;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.PacketByteBuf;
 
-public class HUDHangerClientNetworkHandler {
+public class GUIHangerClientNetworkHandler {
 
     public static void handleData(PacketByteBuf data) {
         if (data != null) {
             byte id = data.readByte();
             System.out.println("!!!!!!!!!!!!!!!!!!!!!id=" + id);
-            if (id == HUDHangerClient.HI)
+            if (id == GUIHangerClient.HI)
                 onHi(data);
-            if (id == HUDHangerClient.DATA)
+            if (id == GUIHangerClient.DATA)
                 onSyncData(data);
         }
     }
 
     private static void onHi(PacketByteBuf data) {
-        synchronized (HUDHangerClient.sync) {
-            HUDHangerClient.isServerSupported = true;
-            if (HUDHangerClient.gameJoined) {
-                respondHello(MinecraftClient.getInstance().player);
+        synchronized (GUIHangerClient.sync) {
+            GUIHangerClient.isServerSupported = true;
+            if (GUIHangerClient.gameJoined) {
+                if (MinecraftClient.getInstance().player != null) {
+                    respondHello(MinecraftClient.getInstance().player);
+                }
             }
         }
     }
 
     public static void respondHello(ClientPlayerEntity clientPlayerEntity) {
         PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
-        buffer.writeByte(HUDHangerClient.HELLO);
+        buffer.writeByte(GUIHangerClient.HELLO);
         clientPlayerEntity.networkHandler.sendPacket(new CustomPayloadC2SPacket(
-                HUDHangerClient.HUD_HANGER_CHANNEL, buffer));
-        HUDHangerMod.LOGGER.info("Connected to a HUDHanger Server");
+                GUIHangerClient.HUD_HANGER_CHANNEL, buffer));
+        GUIHangerMod.LOGGER.info("Connected to a HUDHanger Server");
     }
 
     private static void onSyncData(PacketByteBuf data) {

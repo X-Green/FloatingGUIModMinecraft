@@ -1,8 +1,8 @@
-package dev.eeasee.hud_hanger.mixin;
+package dev.eeasee.gui_hanger.mixin;
 
-import dev.eeasee.hud_hanger.fakes.CustomPayloadC2SPacketInterface;
-import dev.eeasee.hud_hanger.fakes.IMinecraftServer;
-import dev.eeasee.hud_hanger.network.HUDHangerClient;
+import dev.eeasee.gui_hanger.fakes.CustomPayloadC2SPacketInterface;
+import dev.eeasee.gui_hanger.fakes.IMinecraftServer;
+import dev.eeasee.gui_hanger.network.GUIHangerClient;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -28,8 +28,8 @@ public abstract class MixinServerPlayNetworkHandler {
     @Inject(method = "onCustomPayload", at = @At("HEAD"), cancellable = true)
     private void onCustomCarpetPayload(CustomPayloadC2SPacket packet, CallbackInfo ci) {
         Identifier channel = ((CustomPayloadC2SPacketInterface) packet).getPacketChannel();
-        if (HUDHangerClient.HUD_HANGER_CHANNEL.equals(channel)) {
-            ((IMinecraftServer) (MinecraftServer) this.server).getHUDHangerServer().networkHandler.handleData(((CustomPayloadC2SPacketInterface) packet).getPacketData(), player);
+        if (GUIHangerClient.HUD_HANGER_CHANNEL.equals(channel)) {
+            ((IMinecraftServer) this.server).getHUDHangerServer().networkHandler.handleData(((CustomPayloadC2SPacketInterface) packet).getPacketData(), player);
             ci.cancel();
         }
     }

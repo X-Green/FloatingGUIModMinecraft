@@ -1,13 +1,21 @@
-package dev.eeasee.hud_hanger.render.renderer;
+package dev.eeasee.gui_hanger.render.renderer;
 
+import dev.eeasee.gui_hanger.util.QuadVec4f;
+import dev.eeasee.gui_hanger.util.Quadruple;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.List;
 
 public abstract class HungGUIBaseRenderer {
 
@@ -38,29 +46,20 @@ public abstract class HungGUIBaseRenderer {
     }
 
     /**
-     * @param yaw: 90.0(Looking down) -> -90.0(Looking up)
-     */
-    public void setYaw(float yaw) {
-        this.yaw = yaw;
-        this.updateRotationQuaternion();
-        this.updateTransformingMatrix4f();
-    }
-
-    /**
+     * The facing of player holding the screen
+     * -back of the actual rendering facing
+     *
+     * @param yaw:   90.0(Looking down) -> -90.0(Looking up)
      * @param pitch: 0.0(Facing +Z); increase to 180.0(Clockwise); turn to -180.0; back to 0.0
      */
-    public void setPitch(float pitch) {
-        this.pitch = pitch;
-        this.updateRotationQuaternion();
-        this.updateTransformingMatrix4f();
-    }
-
     public void setYawPitch(float yaw, float pitch) {
         this.yaw = yaw;
         this.pitch = pitch;
         this.updateRotationQuaternion();
         this.updateTransformingMatrix4f();
     }
+
+    protected abstract Pair<Integer, Integer> getHeightWidth();
 
     public Vec3d getPos() {
         return this.center;
@@ -90,21 +89,29 @@ public abstract class HungGUIBaseRenderer {
         return this.transformer;
     }
 
-    public abstract void renderBackground(float tickDelta, Camera camera, GameRenderer gameRenderer, Matrix4f matrix4f);
+    public abstract List<Quadruple<QuadVec4f, Identifier, Float, Float>> putBackground(float tickDelta);
 
-    public abstract void renderWidgets(float tickDelta, Camera camera, GameRenderer gameRenderer, Matrix4f matrix4f);
+    public abstract List<Quadruple<QuadVec4f, Identifier, Float, Float>> putWidgets(float tickDelta);
 
-    public abstract void renderItems();
+    public abstract List<Pair<Vector4f, Item>> putItems(float tickDelta);
 
-    public void renderMouse(float tickDelta, Camera camera, GameRenderer gameRenderer, Matrix4f matrix4f) {
+    public QuadVec4f putMouseAndBindTexture() {
+        int mx = this.mouseX;
+        int my = this.mouseY;
+        if (mx < 0 || my < 0) {
+            return null;
+        }
+        Pair<Integer, Integer> size = this.getHeightWidth();
+        if (mx > size.getLeft() || my > size.getRight()) {
+            return null;
+        }
 
+        //todo: mouse
+        return null;
     }
 
     public void renderFlat(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer) {
         matrices.push();
-        this.renderBackground(tickDelta, camera, gameRenderer, this.getTransformer());
-        this.renderWidgets(tickDelta, camera, gameRenderer, this.getTransformer());
-        this.renderMouse(tickDelta, camera, gameRenderer, this.getTransformer());
         matrices.pop();
     }
 
@@ -122,6 +129,8 @@ public abstract class HungGUIBaseRenderer {
         this.transformer = Matrix4f.translate((float) pos.x, (float) pos.y, (float) pos.z);
         this.transformer.multiply(this.getRotation());
     }
+
+    public abstract void updateSizeSettings();
 
     @Override
     public int hashCode() {

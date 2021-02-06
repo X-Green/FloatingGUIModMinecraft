@@ -1,6 +1,6 @@
-package dev.eeasee.hud_hanger.mixin;
+package dev.eeasee.gui_hanger.mixin;
 
-import dev.eeasee.hud_hanger.fakes.IMinecraftServer;
+import dev.eeasee.gui_hanger.fakes.IMinecraftServer;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;

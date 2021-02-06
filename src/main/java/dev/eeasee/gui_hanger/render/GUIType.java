@@ -1,4 +1,4 @@
-package dev.eeasee.hud_hanger.render;
+package dev.eeasee.gui_hanger.render;
 
 public enum GUIType {
     CRAFTING_TABLE,
