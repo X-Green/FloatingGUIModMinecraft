@@ -1,16 +1,11 @@
 package dev.eeasee.gui_hanger.render.renderer;
 
-import com.google.common.collect.Lists;
-import dev.eeasee.gui_hanger.config.Configs;
 import dev.eeasee.gui_hanger.util.QuadVec2f;
 import dev.eeasee.gui_hanger.util.QuadVec4f;
-import dev.eeasee.gui_hanger.util.Quadruple;
-import net.minecraft.client.util.math.Matrix4f;
-import net.minecraft.client.util.math.Vector4f;
+import dev.eeasee.gui_hanger.util.Vec2i;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.util.PacketByteBuf;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +29,7 @@ public class CraftingTableRenderer extends ContainerGUIRenderer {
     }
 
     @Override
-    public void addItem(ItemStack stack, int x, int y) {
+    public void readPacketBytes(PacketByteBuf byteBuf) {
 
     }
 
@@ -49,7 +44,32 @@ public class CraftingTableRenderer extends ContainerGUIRenderer {
     }
 
     @Override
-    public Triple<QuadVec4f, Identifier, QuadVec2f> putBackground(float tickDelta) {
+    public Vec2i getItemCoordinate(int itemIndex) {
+        int x, y;
+        if (itemIndex < 0) {
+            return null;
+        }
+        if (itemIndex < 9) {
+            return new Vec2i(72 - itemIndex * 18, -66);
+        }
+        if (itemIndex < 36) {
+            int lineNumber, columnNumber;
+            lineNumber = (itemIndex) / 9 - 1;
+            columnNumber = itemIndex % 9;
+            return new Vec2i(72 - columnNumber * 18, -44 + lineNumber * 18);
+        }
+        if (itemIndex < 45) {
+
+        }
+        if (itemIndex == 45) {
+
+        }
+        return null;
+
+    }
+
+    @Override
+    public Triple<QuadVec4f, Identifier, QuadVec2f> putBackgroundRendering(float tickDelta) {
         return Triple.of(
                 new QuadVec4f(
                         -(float) WIDTH / 2.0f, -(float) HEIGHT / 2.0f,
@@ -63,13 +83,7 @@ public class CraftingTableRenderer extends ContainerGUIRenderer {
 
     @NotNull
     @Override
-    public List<Triple<QuadVec4f, Identifier, QuadVec2f>> putWidgets(float tickDelta) {
-        return Collections.EMPTY_LIST;
-    }
-
-    @NotNull
-    @Override
-    public List<Pair<Vector4f, Item>> putItems(float tickDelta) {
+    public List<Triple<QuadVec4f, Identifier, QuadVec2f>> putWidgetsRendering(float tickDelta) {
         return Collections.EMPTY_LIST;
     }
 
