@@ -1,9 +1,10 @@
-package dev.eeasee.gui_hanger.render.renderer;
+package dev.eeasee.gui_hanger.sprites.renderer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dev.eeasee.gui_hanger.config.Configs;
-import dev.eeasee.gui_hanger.render.Textures;
+import dev.eeasee.gui_hanger.sprites.SpriteType;
+import dev.eeasee.gui_hanger.sprites.Textures;
 import dev.eeasee.gui_hanger.util.QuadVec2f;
 import dev.eeasee.gui_hanger.util.QuadVec4f;
 import dev.eeasee.gui_hanger.util.Vec2i;
@@ -32,7 +33,9 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseGUIRenderer {
+public abstract class BaseSprite {
+
+    protected final SpriteType type;
 
     protected int mouseX = -1;
     protected int mouseY = -1;
@@ -56,8 +59,9 @@ public abstract class BaseGUIRenderer {
      */
     protected final int id;
 
-    public BaseGUIRenderer(int id) {
+    public BaseSprite(int id, SpriteType type) {
         this.id = id;
+        this.type = type;
     }
 
     public abstract void readPacketBytes(PacketByteBuf byteBuf);

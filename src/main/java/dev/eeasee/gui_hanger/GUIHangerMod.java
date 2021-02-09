@@ -1,29 +1,27 @@
 package dev.eeasee.gui_hanger;
 
-import dev.eeasee.gui_hanger.render.HangedGUIRenderManager;
-import dev.eeasee.gui_hanger.render.renderer.CraftingTableRenderer;
+import dev.eeasee.gui_hanger.sprites.SpriteManager;
+import dev.eeasee.gui_hanger.sprites.renderer.CraftingTableSprite;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class GUIHangerMod implements ModInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final String MOD_ID = "GUI Hanger";
+    public static final String MOD_ID = "gui_hanger";
 
     @Override
     public void onInitialize() {
         System.out.println("Reeeeee!");
-        CraftingTableRenderer craftingTableRenderer = new CraftingTableRenderer(0);
+        CraftingTableSprite craftingTableRenderer = new CraftingTableSprite(0);
         craftingTableRenderer.setPos(new BlockPos(-60, 82, -216));
         craftingTableRenderer.setMouse(176, 166);
         craftingTableRenderer.setYawPitch(0, 0);
-        HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.put(0, craftingTableRenderer);
+        SpriteManager.ACTIVE_SPRITES.put(0, craftingTableRenderer);
     }
 
     public static void tellPlayer(Object o) {

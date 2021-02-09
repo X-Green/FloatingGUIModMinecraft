@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "hud_hanger",
+  "id": "gui_hanger",
   "version": "${version}",
   "name": "HUD Hanger",
   "description": "Make GUIs float in the world",

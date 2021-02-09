@@ -1,7 +1,7 @@
 package dev.eeasee.gui_hanger.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.eeasee.gui_hanger.render.HangedGUIRenderManager;
+import dev.eeasee.gui_hanger.sprites.SpriteManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -84,7 +84,7 @@ public abstract class ClientMixinWorldRenderer {
 
         matrices.pop();
 
-        HangedGUIRenderManager.renderModels(matrices, tickDelta, camera, gameRenderer, this.textureManager, this.bufferBuilders);
+        SpriteManager.renderModels(matrices, tickDelta, camera, gameRenderer, this.textureManager, this.bufferBuilders);
 
 
     }
@@ -102,7 +102,7 @@ public abstract class ClientMixinWorldRenderer {
         RenderSystem.enableAlphaTest();
         RenderSystem.disableCull();
 
-        HangedGUIRenderManager.renderFlat(matrices, tickDelta, camera, gameRenderer, this.textureManager);
+        SpriteManager.renderFlat(matrices, tickDelta, camera, gameRenderer, this.textureManager);
 
         RenderSystem.enableCull();
         RenderSystem.disableAlphaTest();

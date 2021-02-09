@@ -1,9 +1,9 @@
-package dev.eeasee.gui_hanger.render.renderer;
+package dev.eeasee.gui_hanger.sprites.renderer;
 
+import dev.eeasee.gui_hanger.sprites.SpriteType;
 import dev.eeasee.gui_hanger.util.QuadVec2f;
 import dev.eeasee.gui_hanger.util.QuadVec4f;
 import dev.eeasee.gui_hanger.util.Vec2i;
-import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import org.apache.commons.lang3.tuple.Triple;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-public class CraftingTableRenderer extends ContainerGUIRenderer {
+public class CraftingTableSprite extends ContainerSprite {
     private static final Identifier BG_TEX = new Identifier("textures/gui/container/crafting_table.png");
 
     private static final int WIDTH = 176;
@@ -24,8 +24,8 @@ public class CraftingTableRenderer extends ContainerGUIRenderer {
             0, 0
     );
 
-    public CraftingTableRenderer(int id) {
-        super(id);
+    public CraftingTableSprite(int id) {
+        super(id, SpriteType.CRAFTING_TABLE);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class CraftingTableRenderer extends ContainerGUIRenderer {
     @NotNull
     @Override
     public List<Triple<QuadVec4f, Identifier, QuadVec2f>> putWidgetsRendering(float tickDelta) {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
 }

@@ -1,6 +1,5 @@
 package dev.eeasee.gui_hanger.network;
 
-import dev.eeasee.gui_hanger.render.HangedGUIRenderManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
@@ -11,9 +10,9 @@ public class GUIHangerClient {
     public static final Identifier HUD_HANGER_CHANNEL = new Identifier("h_h:c");
     private static final MinecraftClient MINECRAFT_CLIENT = MinecraftClient.getInstance();
 
-    public static final byte HI = 69;
-    public static final byte HELLO = 111;
-    public static final byte DATA = 1;
+    public static final byte HI = 2;
+    public static final byte HELLO = 3;
+    public static final byte DATA = 4;
 
     public static void gameJoined() {
         synchronized (sync) {

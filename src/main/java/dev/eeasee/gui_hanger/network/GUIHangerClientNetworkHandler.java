@@ -1,6 +1,8 @@
 package dev.eeasee.gui_hanger.network;
 
 import dev.eeasee.gui_hanger.GUIHangerMod;
+import dev.eeasee.gui_hanger.sprites.SpriteType;
+import dev.eeasee.gui_hanger.sprites.SpriteManager;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -39,12 +41,38 @@ public class GUIHangerClientNetworkHandler {
     }
 
     private static void onSyncData(PacketByteBuf data) {
-        int objectID = data.readVarInt();
         while (true) {
-            int key = data.readByte();
-            if (key <= 0) {
-                break;
+            try {
+                int id = data.readByte();
+                switch (id) {
+                    case -2: // Sprite Creating
+                        int newID = data.readVarInt();
+                        SpriteManager.ACTIVE_SPRITES.put(
+                                newID,
+                                SpriteType.values()[data.readUnsignedByte()].generateSprite(newID)
+                        );
+                        break;
+                    case -3: // Sprite Removing
+                        SpriteManager.ACTIVE_SPRITES.remove(data.readInt());
+                        break;
+                    default:
+                        if (id < 0) {
+                            return;
+                        }
+                        if (SpriteManager.ACTIVE_SPRITES.containsKey(id)) {
+                            // Operating on sprite with the ID read.
+                            SpriteManager.ACTIVE_SPRITES.get(id).readPacketBytes(data);
+                        } else {
+                            verifySprite(id);
+                        }
+                }
+            } catch (IndexOutOfBoundsException ignored) {
+
             }
         }
+    }
+
+    private static void verifySprite(int id) {
+        //todo: ask the server to send the sprite again.
     }
 }
