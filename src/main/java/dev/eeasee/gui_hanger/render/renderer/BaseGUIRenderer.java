@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.Pair;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.tuple.Triple;
@@ -71,6 +72,10 @@ public abstract class BaseGUIRenderer {
             this.isChanged = true;
             this.center = vec3d;
         }
+    }
+
+    public void setPos(BlockPos blockPos) {
+        this.setPos(new Vec3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5));
     }
 
     /**
@@ -141,7 +146,7 @@ public abstract class BaseGUIRenderer {
             if (vec2i == null) {
                 continue;
             }
-            Matrix4f matrix4f = Matrix4f.translate(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f);
+            Matrix4f matrix4f = Matrix4f.translate(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f * Configs.hungScreenScale);
             result.add(new Pair<>(matrix4f, item.getStackForRender()));
         }
         return result;
@@ -211,6 +216,8 @@ public abstract class BaseGUIRenderer {
         }
         this.assembledKeyCached.clear();
 
+        //todo: add mouse
+        /*
         Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
         Pair<QuadVec4f, QuadVec2f> pair = this.putMouseRenderingAndBindTexture(textureManager);
         if (pair != null) {
@@ -223,7 +230,7 @@ public abstract class BaseGUIRenderer {
             bufferBuilder.vertex(vertexes.vectors[3].getX() - cameraPos.x, vertexes.vectors[3].getY() - cameraPos.y, vertexes.vectors[3].getZ() - cameraPos.z).texture(uv.vectors[3].x, uv.vectors[3].y).color(255, 255, 255, 255).next();
             Tessellator.getInstance().draw();
         }
-
+         */
         matrices.pop();
     }
 
@@ -284,6 +291,6 @@ public abstract class BaseGUIRenderer {
     }
 
     public int getRealY(int y) {
-        return y - this.getHeight() >> 1;
+        return y;
     }
 }

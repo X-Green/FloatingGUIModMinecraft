@@ -8,17 +8,17 @@
     "eeasee"
   ],
   "contact": {
-    "sources": "https://github.com/X-Green/HUDHangerModMinecraft"
+    "sources": "https://github.com/X-Green/GUIHangerModMinecraft"
   },
   "license": "CC0-1.0",
-  "icon": "assets/hud_hanger/icon.png",
+  "icon": "assets/gui_hanger/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
       "dev.eeasee.gui_hanger.GUIHangerMod"
     ],
     "modmenu": [
-      "dev.eeasee.gui_hanger.compat.modmenu.ModMenuImpl"
+      "dev.eeasee.gui_hanger.compat.modmenu.GUIHangerModMenuImpl"
     ]
   },
   "mixins": [

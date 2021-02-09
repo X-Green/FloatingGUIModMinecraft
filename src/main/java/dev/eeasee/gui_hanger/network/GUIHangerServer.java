@@ -22,6 +22,12 @@ public class GUIHangerServer {
         HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(9, Items.PINK_BED);
         HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(18, Items.GRASS_BLOCK);
         HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(27, Items.DIAMOND_BLOCK);
+        HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(36, Items.IRON_INGOT);
+        HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(37, Items.GOLD_INGOT);
+        HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(38, Items.REDSTONE);
+        HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(39, Items.EMERALD);
+        HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(44, Items.DIAMOND);
+        HangedGUIRenderManager.ACTIVE_HUNG_GUI_RENDERERS.get(0).getItems().put(45, Items.BEACON);
     }
 
     public void tick() {

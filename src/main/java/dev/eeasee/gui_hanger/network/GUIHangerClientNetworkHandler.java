@@ -12,7 +12,6 @@ public class GUIHangerClientNetworkHandler {
     public static void handleData(PacketByteBuf data) {
         if (data != null) {
             byte id = data.readByte();
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!id=" + id);
             if (id == GUIHangerClient.HI)
                 onHi(data);
             if (id == GUIHangerClient.DATA)
@@ -46,8 +45,6 @@ public class GUIHangerClientNetworkHandler {
             if (key <= 0) {
                 break;
             }
-            PacketDataType dataType = PacketDataType.VALUES[key];
-            dataType.packetReader.accept(data, objectID);
         }
     }
 }
