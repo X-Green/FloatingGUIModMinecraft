@@ -1,0 +1,28 @@
+ChannelIdentifier: "h_h:c"
+
+Contents:
+    (head:byte ->
+        2=HI
+        3=HELLO
+        4=DATA (
+                id:int ->                                                           // SPRITE SELECTING
+                -1=StopPacketReading [RETURN]
+                -2=SpriteCreating (
+                    spriteID:int, spriteType:unsigned_byte -> [Client Create Sprite]
+                )
+                -3=SpriteRemoving (spriteID:int -> [Client Remove Sprite])
+                0~=SpriteDataReading (
+                    property:unsigned_byte ->
+                        0=NULL
+                            [BACK TO SPRITE SELECTING]
+                        1=POSITION
+                            (x:float, y:float, z:float)
+                        2=YAW_PITCH
+                            (yaw:float, pitch:float)
+                        3=ADD_ITEM
+                            (itemIndex:unsigned_byte, itemInGameID:unsigned_short)
+                        4=REMOVE_ITEM
+                            (itemIndex:unsigned_byte)
+                )
+        )
+    )

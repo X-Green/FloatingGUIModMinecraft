@@ -5,15 +5,14 @@ import dev.eeasee.gui_hanger.util.QuadVec2f;
 import dev.eeasee.gui_hanger.util.QuadVec4f;
 import dev.eeasee.gui_hanger.util.Vec2i;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CraftingTableSprite extends ContainerSprite {
-    private static final Identifier BG_TEX = new Identifier("textures/gui/container/crafting_table.png");
+public class InventorySprite extends ContainerSprite {
+    private static final Identifier BG_TEX = new Identifier("textures/gui/container/inventory.png");
 
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
@@ -24,23 +23,23 @@ public class CraftingTableSprite extends ContainerSprite {
             0, 0
     );
 
-    public CraftingTableSprite(int id) {
-        super(id, SpriteType.CRAFTING_TABLE);
+    public InventorySprite(int id) {
+        super(id, SpriteType.INVENTORY);
     }
 
     @Override
     protected int getWidth() {
-        return WIDTH;
+        return 176;
     }
 
     @Override
     protected int getHeight() {
-        return HEIGHT;
+        return 166;
     }
 
     @Override
     public String getSpriteName() {
-        return "CraftingTableSprite";
+        return "InventorySprite";
     }
 
     @Override
@@ -57,13 +56,17 @@ public class CraftingTableSprite extends ContainerSprite {
             columnNumber = itemIndex % 9;
             return new Vec2i(72 - columnNumber * 18, 39 + lineNumber * 18);
         }
+        if (itemIndex < 40) {
+            return new Vec2i(72, 150 - (39 - itemIndex) * 18);
+        }
+        if (itemIndex == 40) {
+            return new Vec2i(2, 96);
+        }
         if (itemIndex < 45) {
-            int x = 50 - (itemIndex % 3) * 18;
-            int y = 142 - (itemIndex - 36) / 3 * 18;
-            return new Vec2i(x, y);
+            return new Vec2i((itemIndex % 2 == 0) ? -18 : -36, (itemIndex > 43) ? 122 : 140);
         }
         if (itemIndex == 45) {
-            return new Vec2i(-43, 124);
+            return new Vec2i(-73, 130);
         }
         return null;
     }
@@ -81,10 +84,8 @@ public class CraftingTableSprite extends ContainerSprite {
                 BG_TEX_UV);
     }
 
-    @NotNull
     @Override
-    public List<Triple<QuadVec4f, Identifier, QuadVec2f>> putWidgetsRendering(float tickDelta) {
+    public @NotNull List<Triple<QuadVec4f, Identifier, QuadVec2f>> putWidgetsRendering(float tickDelta) {
         return Collections.emptyList();
     }
-
 }

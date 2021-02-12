@@ -44,7 +44,7 @@ public abstract class BaseSprite {
     protected float pitch = 0.0f;
     protected Quaternion rotation = new Quaternion(0, 0, 0, 1);
     protected Matrix4f transformer = Matrix4f.translate(0, 0, 0);
-    protected Vec3d center;
+    protected Vector3f center;
 
     private Map<Identifier, List<Triple<QuadVec4f, Identifier, QuadVec2f>>> assembledKeyCached = Maps.newHashMap();
 
@@ -71,15 +71,15 @@ public abstract class BaseSprite {
         this.mouseY = y;
     }
 
-    public void setPos(Vec3d vec3d) {
-        if (!vec3d.equals(this.center)) {
+    public void setPos(Vector3f vector3f) {
+        if (!vector3f.equals(this.center)) {
             this.isChanged = true;
-            this.center = vec3d;
+            this.center = vector3f;
         }
     }
 
     public void setPos(BlockPos blockPos) {
-        this.setPos(new Vec3d(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5));
+        this.setPos(new Vector3f(blockPos.getX() + 0.5f, blockPos.getY() + 0.5f, blockPos.getZ()));
     }
 
     /**
@@ -97,11 +97,15 @@ public abstract class BaseSprite {
         }
     }
 
+    public abstract void setItem(int index, Item item);
+
     protected abstract int getWidth();
 
     protected abstract int getHeight();
 
-    public Vec3d getPos() {
+    public abstract String getSpriteName();
+
+    public Vector3f getPos() {
         return this.center;
     }
 
@@ -128,6 +132,8 @@ public abstract class BaseSprite {
     public Matrix4f getTransformer() {
         return this.transformer;
     }
+
+    public abstract Item getItem(int index);
 
     @NotNull
     public abstract Int2ObjectMap<Item> getItems();
@@ -277,8 +283,8 @@ public abstract class BaseSprite {
         this.rotation = Vector3f.NEGATIVE_Y.getDegreesQuaternion(this.getYaw());
         rotation.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(this.getPitch()));
         rotation.hamiltonProduct(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0f));
-        Vec3d pos = this.getPos();
-        this.transformer = Matrix4f.translate((float) pos.x, (float) pos.y, (float) pos.z);
+        Vector3f pos = this.getPos();
+        this.transformer = Matrix4f.translate(pos.getX(), pos.getY(), pos.getZ());
         this.transformer.multiply(this.getRotation());
         this.transformer.multiply(SCALE_MATRIX);
 

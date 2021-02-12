@@ -5,6 +5,6 @@ public class Configs {
     public static boolean sendScreenToServerIfSupported = true;
     public static boolean sendBackToClient = true;
     public static boolean displayInClientWorld = true;
-    public static float hungScreenScale = 1f;
+    public static float hungScreenScale = 1.5f;
 
 }
