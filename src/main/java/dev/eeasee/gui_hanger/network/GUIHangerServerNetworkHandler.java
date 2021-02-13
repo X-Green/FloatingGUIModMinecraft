@@ -79,7 +79,7 @@ public class GUIHangerServerNetworkHandler {
 
         packetByteBuf.writeInt(-2);
         packetByteBuf.writeVarInt(0);
-        packetByteBuf.writeByte(SpriteType.INVENTORY.ordinal());
+        packetByteBuf.writeByte(SpriteType.ANVIL.ordinal());
 
         packetByteBuf.writeInt(0);
 
@@ -102,6 +102,8 @@ public class GUIHangerServerNetworkHandler {
         SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(41, Items.GUNPOWDER));
         SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(44, Items.PAPER));
         SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(45, Items.FIREWORK_ROCKET));
+
+
         SpriteProperty.NULL.writePacketBytes(packetByteBuf, null);
 
         packetByteBuf.writeInt(-1);

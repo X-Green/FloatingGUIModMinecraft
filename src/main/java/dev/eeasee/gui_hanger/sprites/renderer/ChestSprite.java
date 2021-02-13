@@ -11,9 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-public class InventorySprite extends ContainerSprite {
-    private static final Identifier BG_TEX = new Identifier("textures/gui/container/inventory.png");
-
+public class ChestSprite extends ContainerSprite {
+    private static final Identifier BG_TEX = new Identifier("textures/gui/container/shulker_box.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
     public static final QuadVec2f BG_TEX_UV = new QuadVec2f(
@@ -22,9 +21,8 @@ public class InventorySprite extends ContainerSprite {
             (float) WIDTH / 256.0f, 0,
             0, 0
     );
-
-    public InventorySprite(int id) {
-        super(id, SpriteType.INVENTORY);
+    public ChestSprite(int id) {
+        super(id, SpriteType.CHEST);
     }
 
     @Override
@@ -39,7 +37,7 @@ public class InventorySprite extends ContainerSprite {
 
     @Override
     public String getSpriteName() {
-        return "InventorySprite";
+        return "ChestSprite";
     }
 
     @Override
@@ -56,17 +54,11 @@ public class InventorySprite extends ContainerSprite {
             columnNumber = itemIndex % 9;
             return new Vec2i(72 - columnNumber * 18, 39 + lineNumber * 18);
         }
-        if (itemIndex < 40) {
-            return new Vec2i(72, 150 - (39 - itemIndex) * 18);
-        }
-        if (itemIndex == 40) {
-            return new Vec2i(3, 96);
-        }
-        if (itemIndex < 45) {
-            return new Vec2i((itemIndex % 2 == 0) ? -18 : -36, (itemIndex > 43) ? 121 : 139);
-        }
-        if (itemIndex == 45) {
-            return new Vec2i(-73, 130);
+        if (itemIndex < 63) {
+            int lineNumber, columnNumber;
+            lineNumber = (itemIndex) / 9 - 1;
+            columnNumber = itemIndex % 9;
+            return new Vec2i(72 - columnNumber * 18, 50 + lineNumber * 18);
         }
         return null;
     }

@@ -11,35 +11,34 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-public class InventorySprite extends ContainerSprite {
-    private static final Identifier BG_TEX = new Identifier("textures/gui/container/inventory.png");
+public class LargeChestSprite extends ContainerSprite {
+    private static final Identifier BG_TEX = new Identifier("textures/gui/container/generic_54.png");
 
     private static final int WIDTH = 176;
-    private static final int HEIGHT = 166;
+    private static final int HEIGHT = 222;
     public static final QuadVec2f BG_TEX_UV = new QuadVec2f(
             0, (float) HEIGHT / 256.0f,
             (float) WIDTH / 256.0f, (float) HEIGHT / 256.0f,
             (float) WIDTH / 256.0f, 0,
             0, 0
     );
-
-    public InventorySprite(int id) {
-        super(id, SpriteType.INVENTORY);
+    public LargeChestSprite(int id) {
+        super(id, SpriteType.LARGE_CHEST);
     }
 
     @Override
     protected int getWidth() {
-        return 176;
+        return WIDTH;
     }
 
     @Override
     protected int getHeight() {
-        return 166;
+        return HEIGHT;
     }
 
     @Override
     public String getSpriteName() {
-        return "InventorySprite";
+        return "LargeChestSprite";
     }
 
     @Override
@@ -56,17 +55,11 @@ public class InventorySprite extends ContainerSprite {
             columnNumber = itemIndex % 9;
             return new Vec2i(72 - columnNumber * 18, 39 + lineNumber * 18);
         }
-        if (itemIndex < 40) {
-            return new Vec2i(72, 150 - (39 - itemIndex) * 18);
-        }
-        if (itemIndex == 40) {
-            return new Vec2i(3, 96);
-        }
-        if (itemIndex < 45) {
-            return new Vec2i((itemIndex % 2 == 0) ? -18 : -36, (itemIndex > 43) ? 121 : 139);
-        }
-        if (itemIndex == 45) {
-            return new Vec2i(-73, 130);
+        if (itemIndex < 90) {
+            int lineNumber, columnNumber;
+            lineNumber = (itemIndex) / 9 - 1;
+            columnNumber = itemIndex % 9;
+            return new Vec2i(72 - columnNumber * 18, 50 + lineNumber * 18);
         }
         return null;
     }
@@ -87,5 +80,4 @@ public class InventorySprite extends ContainerSprite {
     @Override
     public @NotNull List<Triple<QuadVec4f, Identifier, QuadVec2f>> putWidgetsRendering(float tickDelta) {
         return Collections.emptyList();
-    }
-}
+    }}

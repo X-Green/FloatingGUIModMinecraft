@@ -6,7 +6,7 @@ public class Test1 {
     private static volatile String s = "bbb";
 
     public static void main(String[] args) {
-        System.out.println(new InventorySprite(0).getItemCoordinate(4));
+        System.out.println(new InventorySprite(0).getItemCoordinate(34));
     }
 
     public static void printVarInt(int i) {

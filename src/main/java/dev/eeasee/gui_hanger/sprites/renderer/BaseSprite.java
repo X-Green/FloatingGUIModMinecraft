@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dev.eeasee.gui_hanger.config.Configs;
 import dev.eeasee.gui_hanger.sprites.SpriteType;
-import dev.eeasee.gui_hanger.sprites.Textures;
 import dev.eeasee.gui_hanger.util.QuadVec2f;
 import dev.eeasee.gui_hanger.util.QuadVec4f;
 import dev.eeasee.gui_hanger.util.Vec2i;
@@ -35,6 +34,13 @@ import java.util.Map;
 
 public abstract class BaseSprite {
 
+    public static final Identifier MOUSE_ICON = new Identifier("gui_hanger","texture/mouse_icon.png");
+    public static final QuadVec2f MOUSE_ICON_TEXTURE_UV = new QuadVec2f(
+            0, 1,
+            1, 1,
+            1, 0,
+            0, 0
+    );
     protected final SpriteType type;
 
     protected int mouseX = -1;
@@ -172,7 +178,7 @@ public abstract class BaseSprite {
         if (mx > this.getWidth() || my > this.getHeight()) {
             return null;
         }
-        textureManager.bindTexture(Textures.MOUSE_ICON);
+        textureManager.bindTexture(MOUSE_ICON);
         int startX = this.getRealX(mx);
         int startY = this.getRealY(my);
         final float sideLength = 32.0f;
@@ -183,7 +189,7 @@ public abstract class BaseSprite {
                         startX + sideLength, startY + sideLength,
                         startX, startY + sideLength
                 ),
-                Textures.MOUSE_ICON_TEXTURE_UV
+                MOUSE_ICON_TEXTURE_UV
         );
     }
 

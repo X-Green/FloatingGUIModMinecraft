@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-public class InventorySprite extends ContainerSprite {
-    private static final Identifier BG_TEX = new Identifier("textures/gui/container/inventory.png");
+public class HopperSprite extends ContainerSprite {
+    private static final Identifier BG_TEX = new Identifier("textures/gui/container/hopper.png");
 
     private static final int WIDTH = 176;
-    private static final int HEIGHT = 166;
+    private static final int HEIGHT = 133;
     public static final QuadVec2f BG_TEX_UV = new QuadVec2f(
             0, (float) HEIGHT / 256.0f,
             (float) WIDTH / 256.0f, (float) HEIGHT / 256.0f,
@@ -23,23 +23,23 @@ public class InventorySprite extends ContainerSprite {
             0, 0
     );
 
-    public InventorySprite(int id) {
-        super(id, SpriteType.INVENTORY);
+    public HopperSprite(int id) {
+        super(id, SpriteType.HOPPER);
     }
 
     @Override
     protected int getWidth() {
-        return 176;
+        return WIDTH;
     }
 
     @Override
     protected int getHeight() {
-        return 166;
+        return HEIGHT;
     }
 
     @Override
     public String getSpriteName() {
-        return "InventorySprite";
+        return "HopperSprite";
     }
 
     @Override
@@ -56,17 +56,8 @@ public class InventorySprite extends ContainerSprite {
             columnNumber = itemIndex % 9;
             return new Vec2i(72 - columnNumber * 18, 39 + lineNumber * 18);
         }
-        if (itemIndex < 40) {
-            return new Vec2i(72, 150 - (39 - itemIndex) * 18);
-        }
-        if (itemIndex == 40) {
-            return new Vec2i(3, 96);
-        }
-        if (itemIndex < 45) {
-            return new Vec2i((itemIndex % 2 == 0) ? -18 : -36, (itemIndex > 43) ? 121 : 139);
-        }
-        if (itemIndex == 45) {
-            return new Vec2i(-73, 130);
+        if (itemIndex < 41) {
+            return new Vec2i(36 - (itemIndex - 36) * 18, 104);
         }
         return null;
     }
