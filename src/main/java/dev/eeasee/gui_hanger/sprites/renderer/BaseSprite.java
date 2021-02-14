@@ -70,7 +70,9 @@ public abstract class BaseSprite {
         this.type = type;
     }
 
-    public abstract void readPacketBytes(PacketByteBuf byteBuf);
+    public void readPacketBytes(PacketByteBuf byteBuf){
+
+    }
 
     public void setMouse(int x, int y) {
         this.mouseX = x;

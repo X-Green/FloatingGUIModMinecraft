@@ -18,7 +18,7 @@ public class GUIHangerServer {
 
     public GUIHangerServer(MinecraftServer server) {
         this.minecraftServer = server;
-        this.networkHandler = new GUIHangerServerNetworkHandler(server);
+        this.networkHandler = new GUIHangerServerNetworkHandler(server, this);
     }
 
     public void tick() {

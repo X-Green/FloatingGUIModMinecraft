@@ -1,5 +1,6 @@
 package dev.eeasee.gui_hanger.network;
 
+import dev.eeasee.gui_hanger.sprites.SpriteProperty;
 import dev.eeasee.gui_hanger.sprites.SpriteType;
 import dev.eeasee.gui_hanger.sprites.SpriteManager;
 import io.netty.buffer.Unpooled;
@@ -75,7 +76,13 @@ public class GUIHangerClientNetworkHandler {
                         // Operating on sprite with the ID read.
                         SpriteManager.ACTIVE_SPRITES.get(id).readPacketBytes(data);
                     } else {
-                        verifySprite(id);
+                        if (data.readByte() == SpriteProperty.ID_CREATE) {
+                            int newID = data.readVarInt();
+                            SpriteManager.ACTIVE_SPRITES.put(
+                                    newID,
+                                    SpriteType.values()[data.readUnsignedByte()].generateSprite(newID)
+                            );
+                        }
                     }
                 }
             } catch (IndexOutOfBoundsException e) {

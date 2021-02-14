@@ -64,7 +64,7 @@ public class AnvilSprite extends ContainerSprite {
     @Override
     public void readPacketBytes(PacketByteBuf byteBuf) {
         while (true) {
-            int propertyID = byteBuf.readUnsignedByte();
+            byte propertyID = byteBuf.readByte();
             switch (propertyID) {
                 case SpriteProperty.ID_NULL:
                     return;

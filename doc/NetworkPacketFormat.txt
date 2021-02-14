@@ -12,7 +12,7 @@ Contents:
                 )
                 -3=SpriteRemoving (spriteID:int -> [Client Remove Sprite])
                 0~=SpriteDataReading (
-                    property:unsigned_byte ->
+                    property:byte ->
                         0=NULL
                             [BACK TO SPRITE SELECTING]
                         1=POSITION

@@ -2,7 +2,6 @@ package dev.eeasee.gui_hanger.sprites;
 
 import dev.eeasee.gui_hanger.sprites.renderer.*;
 
-import java.util.function.Function;
 import java.util.function.IntFunction;
 
 public enum SpriteType {
@@ -13,6 +12,7 @@ public enum SpriteType {
     GENERIC_3X3(Generic3x3Sprite::new),
     HOPPER(HopperSprite::new),
     ANVIL(AnvilSprite::new),
+    HORSE(null),
     FURNACE(null),
     VILLAGER(null),
     ENCHANTING_TABLE(null),
@@ -23,7 +23,6 @@ public enum SpriteType {
     // STRUCTURE_BLOCK(null),
     LOOM(null),
     LECTERN(null),
-    HORSE(null),
     GRINDSTONE(null),
     CARTOGRAPHY_TABLE(null),
     // BLAST_FURNACE(null),
