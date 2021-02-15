@@ -11,6 +11,8 @@
   ],
   "client": [
     "ClientMixinClientPlayNetworkHandler",
+    "ClientMixinItem",
+    "ClientMixinItems",
     "ClientMixinWorldRenderer"
   ],
   "injectors": {

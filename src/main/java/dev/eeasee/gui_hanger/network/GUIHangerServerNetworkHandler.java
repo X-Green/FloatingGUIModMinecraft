@@ -59,34 +59,32 @@ public class GUIHangerServerNetworkHandler {
         PacketByteBuf packetByteBuf = new PacketByteBuf(Unpooled.buffer());
         packetByteBuf.writeByte(GUIHangerClient.DATA);
 
-        packetByteBuf.writeInt(-2);
         packetByteBuf.writeVarInt(0);
+        SpriteProperty.PropertyType.CREATE.writeOrdinalToPacket(packetByteBuf);
         packetByteBuf.writeByte(SpriteType.ANVIL.ordinal());
 
-        packetByteBuf.writeInt(0);
-
-        SpriteProperty.POSITION.writePacketBytes(packetByteBuf, new Vector3f(-60, 82, -216));
-        SpriteProperty.YAW_PITCH.writePacketBytes(packetByteBuf, new Vec2f(0, 0));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(0, Items.WOODEN_SWORD));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(1, Items.STONE_SWORD));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(2, Items.IRON_SWORD));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(3, Items.GOLDEN_SWORD));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(4, Items.DIAMOND_SWORD));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(8, Items.SUGAR));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(9, Items.PINK_BED));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(18, Items.GRASS_BLOCK));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(27, Items.DIAMOND_BLOCK));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(36, Items.DIAMOND_HELMET));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(37, Items.ELYTRA));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(38, Items.DIAMOND_LEGGINGS));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(39, Items.DIAMOND_BOOTS));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(40, Items.COOKED_BEEF));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(41, Items.GUNPOWDER));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(44, Items.PAPER));
-        SpriteProperty.ADD_ITEM.writePacketBytes(packetByteBuf, new Pair<>(45, Items.FIREWORK_ROCKET));
+        SpriteProperty.POSITION.writePacketBytes(new Vector3f(-60, 82, -216), packetByteBuf);
+        SpriteProperty.YAW_PITCH.writePacketBytes(new Vec2f(0, 0), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(0, Items.WOODEN_SWORD), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(1, Items.STONE_SWORD), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(2, Items.IRON_SWORD), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(3, Items.GOLDEN_SWORD), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(4, Items.DIAMOND_SWORD), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(8, Items.SUGAR), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(9, Items.PINK_BED), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(18, Items.GRASS_BLOCK), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(27, Items.DIAMOND_BLOCK), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(36, Items.DIAMOND_HELMET), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(37, Items.ELYTRA), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(38, Items.DIAMOND_LEGGINGS), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(39, Items.DIAMOND_BOOTS), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(40, Items.COOKED_BEEF), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(41, Items.GUNPOWDER), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(44, Items.PAPER), packetByteBuf);
+        SpriteProperty.ADD_ITEM.writePacketBytes(new Pair<>(45, Items.FIREWORK_ROCKET), packetByteBuf);
 
 
-        SpriteProperty.NULL.writePacketBytes(packetByteBuf, null);
+        SpriteProperty.PropertyType.NULL.writeOrdinalToPacket(packetByteBuf);
 
         packetByteBuf.writeInt(-1);
 

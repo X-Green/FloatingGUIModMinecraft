@@ -2,7 +2,9 @@ package dev.eeasee.gui_hanger.sprites.renderer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import dev.eeasee.gui_hanger.GUIHangerMod;
 import dev.eeasee.gui_hanger.config.Configs;
+import dev.eeasee.gui_hanger.sprites.SpriteProperty;
 import dev.eeasee.gui_hanger.sprites.SpriteType;
 import dev.eeasee.gui_hanger.util.QuadVec2f;
 import dev.eeasee.gui_hanger.util.QuadVec4f;
@@ -29,18 +31,33 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
 public abstract class BaseSprite {
 
-    public static final Identifier MOUSE_ICON = new Identifier("gui_hanger","texture/mouse_icon.png");
+    public static final Identifier MOUSE_ICON = new Identifier("gui_hanger", "texture/mouse_icon.png");
     public static final QuadVec2f MOUSE_ICON_TEXTURE_UV = new QuadVec2f(
             0, 1,
             1, 1,
             1, 0,
             0, 0
     );
+
+    public static final float SCALE_NUM = Configs.hungScreenScale * 2.5f / 256.0f;
+    public static Matrix4f SCALE_MATRIX = Matrix4f.scale(SCALE_NUM, SCALE_NUM, SCALE_NUM);
+    public static Matrix4f ITEM_SCALE = Matrix4f.scale(14, 14, 14);
+
+    public static final EnumSet<SpriteProperty.PropertyType> PROPERTIES = EnumSet.noneOf(SpriteProperty.PropertyType.class);
+
+    static {
+        PROPERTIES.add(SpriteProperty.PropertyType.NULL);
+        PROPERTIES.add(SpriteProperty.PropertyType.POSITION);
+        PROPERTIES.add(SpriteProperty.PropertyType.YAW_PITCH);
+    }
+
     protected final SpriteType type;
 
     protected int mouseX = -1;
@@ -54,10 +71,6 @@ public abstract class BaseSprite {
 
     private Map<Identifier, List<Triple<QuadVec4f, Identifier, QuadVec2f>>> assembledKeyCached = Maps.newHashMap();
 
-    public static final float SCALE_NUM = Configs.hungScreenScale * 2.5f / 256.0f;
-    public static Matrix4f SCALE_MATRIX = Matrix4f.scale(SCALE_NUM, SCALE_NUM, SCALE_NUM);
-    public static Matrix4f ITEM_SCALE = Matrix4f.scale(14, 14, 14);
-
     private volatile boolean isChanged = false;
 
     /**
@@ -70,8 +83,31 @@ public abstract class BaseSprite {
         this.type = type;
     }
 
-    public void readPacketBytes(PacketByteBuf byteBuf){
+    public boolean readPacketBytes(PacketByteBuf byteBuf) {
+        while (true) {
+            int propertyID = byteBuf.readUnsignedByte();
+            if (propertyID == SpriteProperty.PropertyType.DESTROY.ordinal()) {
+                this.destroy();
+                return true;
+            }
+            if (propertyID == SpriteProperty.PropertyType.NULL.ordinal()) {
+                return true;
+            }
+            try {
+                SpriteProperty.PropertyType propertyType = SpriteProperty.PropertyType.values()[propertyID];
+                SpriteProperty.getPropertyByType(propertyType).readPacketBytes(this, byteBuf);
+            } catch (ClassCastException e) {
+                return false;
+            }
+        }
+    }
 
+    protected void destroy() {
+
+    }
+
+    public EnumSet<SpriteProperty.PropertyType> getProperties() {
+        return PROPERTIES;
     }
 
     public void setMouse(int x, int y) {
@@ -105,13 +141,15 @@ public abstract class BaseSprite {
         }
     }
 
-    public abstract void setItem(int index, Item item);
-
     protected abstract int getWidth();
 
     protected abstract int getHeight();
 
     public abstract String getSpriteName();
+
+    public int getID() {
+        return this.id;
+    }
 
     public Vector3f getPos() {
         return this.center;
@@ -141,10 +179,6 @@ public abstract class BaseSprite {
         return this.transformer;
     }
 
-    public abstract Item getItem(int index);
-
-    @NotNull
-    public abstract Int2ObjectMap<Item> getItems();
 
     public abstract Vec2i getItemCoordinate(int itemIndex);
 
@@ -153,22 +187,6 @@ public abstract class BaseSprite {
     @NotNull
     public abstract List<Triple<QuadVec4f, Identifier, QuadVec2f>> putWidgetsRendering(float tickDelta);
 
-    @NotNull
-    public List<Pair<Matrix4f, ItemStack>> putItemsRendering(float tickDelta) {
-        Int2ObjectMap<Item> items = this.getItems();
-        List<Pair<Matrix4f, ItemStack>> result = Lists.newArrayListWithCapacity(items.size());
-        for (Int2ObjectMap.Entry<Item> entry : items.int2ObjectEntrySet()) {
-            int i = entry.getIntKey();
-            Item item = entry.getValue();
-            Vec2i vec2i = this.getItemCoordinate(i);
-            if (vec2i == null) {
-                continue;
-            }
-            Matrix4f matrix4f = Matrix4f.translate(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f * Configs.hungScreenScale);
-            result.add(new Pair<>(matrix4f, item.getStackForRender()));
-        }
-        return result;
-    }
 
     @Nullable
     public Pair<QuadVec4f, QuadVec2f> putMouseRenderingAndBindTexture(TextureManager textureManager) {
@@ -252,37 +270,7 @@ public abstract class BaseSprite {
         matrices.pop();
     }
 
-    public void renderModels(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer, TextureManager textureManager, BufferBuilderStorage bufferBuilders) {
-        this.checkUpdateTransformingMatrix4f();
-
-        ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-        VertexConsumerProvider.Immediate immediate = bufferBuilders.getEntityVertexConsumers();
-
-        Vec3d cameraPos = camera.getPos();
-        Matrix4f itemTransformer = Matrix4f.translate(-(float) cameraPos.x, -(float) cameraPos.y, -(float) cameraPos.z);
-        itemTransformer.multiply(this.getTransformer());
-        itemTransformer.multiply(ITEM_SCALE);
-
-        List<Pair<Matrix4f, ItemStack>> items = this.putItemsRendering(tickDelta);
-        for (Pair<Matrix4f, ItemStack> pair : items) {
-            Matrix4f origin = pair.getLeft();
-            origin.multiply(itemTransformer);
-            matrices.push();
-            matrices.peek().getModel().multiply(origin);
-            itemRenderer.renderItem(
-                    null,
-                    pair.getRight(),
-                    ModelTransformation.Mode.GUI,
-                    false,
-                    matrices,
-                    immediate,
-                    null,
-                    0x00f000f0,
-                    OverlayTexture.DEFAULT_UV
-            );
-            matrices.pop();
-        }
-    }
+    public abstract void renderModels(MatrixStack matrices, float tickDelta, Camera camera, GameRenderer gameRenderer, TextureManager textureManager, BufferBuilderStorage bufferBuilders);
 
     protected void checkUpdateTransformingMatrix4f() {
         if (!this.isChanged) {

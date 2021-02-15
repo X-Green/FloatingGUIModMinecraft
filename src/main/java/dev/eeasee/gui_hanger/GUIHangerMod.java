@@ -43,13 +43,13 @@ public class GUIHangerMod implements ModInitializer {
                         PacketByteBuf packetByteBuf = new PacketByteBuf(Unpooled.buffer());
                         packetByteBuf.writeByte(GUIHangerClient.DATA);
 
-                        packetByteBuf.writeInt(0);
+                        packetByteBuf.writeVarInt(0);
 
-                        SpriteProperty.POSITION.writePacketBytes(packetByteBuf, new Vector3f((float) vec3d.x, (float) vec3d.y, (float) vec3d.z));
-                        SpriteProperty.YAW_PITCH.writePacketBytes(packetByteBuf, new Vec2f(playerEntity.yaw, playerEntity.pitch));
-                        SpriteProperty.NULL.writePacketBytes(packetByteBuf, null);
+                        SpriteProperty.POSITION.writePacketBytes(new Vector3f((float) vec3d.x, (float) vec3d.y, (float) vec3d.z), packetByteBuf);
+                        SpriteProperty.YAW_PITCH.writePacketBytes(new Vec2f(playerEntity.yaw, playerEntity.pitch), packetByteBuf);
+                        SpriteProperty.PropertyType.NULL.writeOrdinalToPacket(packetByteBuf);
 
-                        packetByteBuf.writeInt(-1);
+                        packetByteBuf.writeVarInt(-1);
 
                         CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(GUIHangerClient.HUD_HANGER_CHANNEL, packetByteBuf);
 
@@ -66,9 +66,9 @@ public class GUIHangerMod implements ModInitializer {
 
                                 packetByteBuf.writeInt(0);
 
-                                SpriteProperty.POSITION.writePacketBytes(packetByteBuf, new Vector3f((float) vec3d.x, (float) vec3d.y, (float) vec3d.z));
-                                SpriteProperty.YAW_PITCH.writePacketBytes(packetByteBuf, new Vec2f(0, 0));
-                                SpriteProperty.NULL.writePacketBytes(packetByteBuf, null);
+                                SpriteProperty.POSITION.writePacketBytes(new Vector3f((float) vec3d.x, (float) vec3d.y, (float) vec3d.z), packetByteBuf);
+                                SpriteProperty.YAW_PITCH.writePacketBytes(new Vec2f(0, 0), packetByteBuf);
+                                SpriteProperty.PropertyType.NULL.writeOrdinalToPacket(packetByteBuf);
 
                                 packetByteBuf.writeInt(-1);
 

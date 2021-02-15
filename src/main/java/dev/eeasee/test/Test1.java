@@ -8,11 +8,21 @@ public class Test1 {
     private static volatile String s = "bbb";
 
     public static void main(String[] args) {
-        // System.out.println(new InventorySprite(0).getItemCoordinate(34));
-        System.out.println(System.currentTimeMillis());
+        try {
+            for (int i = 0; i < 10000; i++) {
+                //...
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        System.out.println(System.currentTimeMillis());
-        System.out.println(System.currentTimeMillis());
+        for (int i = 0; i < 10000; i++) {
+            try {
+                //...
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void printVarInt(int i) {

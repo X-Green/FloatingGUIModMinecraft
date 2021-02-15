@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class AnvilSprite extends ContainerSprite {
@@ -45,6 +46,13 @@ public class AnvilSprite extends ContainerSprite {
             176.0f / 256.0f, 0f
     );
 
+    private static final EnumSet<SpriteProperty.PropertyType> PROPERTIES = ContainerSprite.PROPERTIES.clone();
+
+    static {
+        PROPERTIES.add(SpriteProperty.PropertyType.ANVIL_ITEM_NAME_AND_AVAILABILITY);
+        PROPERTIES.add(SpriteProperty.PropertyType.ANVIL_CAN_FIX);
+    }
+
 
     private String displayItemName = null;
     private boolean canFixItem = true;
@@ -61,48 +69,8 @@ public class AnvilSprite extends ContainerSprite {
         this.canFixItem = b;
     }
 
-    @Override
-    public void readPacketBytes(PacketByteBuf byteBuf) {
-        while (true) {
-            byte propertyID = byteBuf.readByte();
-            switch (propertyID) {
-                case SpriteProperty.ID_NULL:
-                    return;
-                case SpriteProperty.ID_POSITION:
-                    SpriteProperty.POSITION.readPacketBytes(this::setPos, byteBuf);
-                    break;
-                case SpriteProperty.ID_YAW_PITCH:
-                    SpriteProperty.YAW_PITCH.readPacketBytes(
-                            vec2f -> this.setYawPitch(vec2f.x, vec2f.y), byteBuf
-                    );
-                    break;
-                case SpriteProperty.ID_ADD_ITEM:
-                    SpriteProperty.ADD_ITEM.readPacketBytes(
-                            itemPair -> {
-                                this.setItem(itemPair.getLeft(), itemPair.getRight());
-                            }, byteBuf
-                    );
-                    break;
-                case SpriteProperty.ID_REMOVE_ITEM:
-                    SpriteProperty.REMOVE_ITEM.readPacketBytes(
-                            integer -> this.getItems().remove(integer.intValue()), byteBuf
-                    );
-                    break;
-                case SpriteProperty.ID_ANVIL_ITEM_NAME_AND_AVAILABILITY:
-                    SpriteProperty.ANVIL_ITEM_NAME_AND_AVAILABILITY.readPacketBytes(
-                            this::setAnvilItemNameDisplay, byteBuf
-                    );
-                    break;
-                case SpriteProperty.ID_ANVIL_CAN_FIX:
-                    SpriteProperty.ANVIL_CAN_FIX.readPacketBytes(
-                            this::setCanFixItem, byteBuf
-                    );
-                    break;
-
-                default:
-                    GUIHangerMod.LOGGER.error("Wrong property for sprite:" + this.getSpriteName() + " ->id:" + propertyID);
-            }
-        }
+    public EnumSet<SpriteProperty.PropertyType> getProperties() {
+        return PROPERTIES;
     }
 
 

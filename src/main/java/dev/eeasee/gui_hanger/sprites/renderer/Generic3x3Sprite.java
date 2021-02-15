@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 public class Generic3x3Sprite extends ContainerSprite {
@@ -29,6 +30,13 @@ public class Generic3x3Sprite extends ContainerSprite {
     public static final byte TYPE_DISPENSER = 0;
     public static final byte TYPE_DROPPER = 1;
 
+    private static final EnumSet<SpriteProperty.PropertyType> PROPERTIES = ContainerSprite.PROPERTIES.clone();
+
+    static {
+        PROPERTIES.add(SpriteProperty.PropertyType.SET_TYPE_GENERIC3x3);
+    }
+
+
     private byte container3x3Type = 0;
 
     public Generic3x3Sprite(int id) {
@@ -39,40 +47,9 @@ public class Generic3x3Sprite extends ContainerSprite {
         this.container3x3Type = type;
     }
 
-    @Override
-    public void readPacketBytes(PacketByteBuf byteBuf) {
-        while (true) {
-            byte propertyID = byteBuf.readByte();
-            switch (propertyID) {
-                case SpriteProperty.ID_NULL:
-                    return;
-                case SpriteProperty.ID_POSITION:
-                    SpriteProperty.POSITION.readPacketBytes(this::setPos, byteBuf);
-                    break;
-                case SpriteProperty.ID_YAW_PITCH:
-                    SpriteProperty.YAW_PITCH.readPacketBytes(
-                            vec2f -> this.setYawPitch(vec2f.x, vec2f.y), byteBuf
-                    );
-                    break;
-                case SpriteProperty.ID_ADD_ITEM:
-                    SpriteProperty.ADD_ITEM.readPacketBytes(
-                            itemPair -> this.setItem(itemPair.getLeft(), itemPair.getRight()), byteBuf
-                    );
-                    break;
-                case SpriteProperty.ID_REMOVE_ITEM:
-                    SpriteProperty.REMOVE_ITEM.readPacketBytes(
-                            integer -> this.getItems().remove(integer.intValue()), byteBuf
-                    );
-                    break;
-                case SpriteProperty.ID_SET_TYPE_GENERIC3x3:
-                    SpriteProperty.SET_TYPE_GENERIC3X3.readPacketBytes(this::set3x3ContainerType, byteBuf);
-                    break;
-                default:
-                    GUIHangerMod.LOGGER.error("Wrong property for sprite:" + this.getSpriteName() + " ->id:" + propertyID);
-            }
-        }
+    public EnumSet<SpriteProperty.PropertyType> getProperties() {
+        return PROPERTIES;
     }
-
 
     @Override
     protected int getWidth() {

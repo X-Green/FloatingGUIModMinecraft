@@ -3,6 +3,7 @@ package dev.eeasee.gui_hanger.network;
 import dev.eeasee.gui_hanger.sprites.SpriteProperty;
 import dev.eeasee.gui_hanger.sprites.SpriteType;
 import dev.eeasee.gui_hanger.sprites.SpriteManager;
+import dev.eeasee.gui_hanger.sprites.renderer.BaseSprite;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -52,37 +53,25 @@ public class GUIHangerClientNetworkHandler {
     private static void onSyncData(PacketByteBuf data) {
         while (true) {
             try {
-                int id = data.readInt();
-                if (id < 0) {
-                    switch (id) {
-                        case -1:
-                            return;
-                        case -2: // Sprite Creating
-                            int newID = data.readVarInt();
-                            SpriteManager.ACTIVE_SPRITES.put(
-                                    newID,
-                                    SpriteType.values()[data.readUnsignedByte()].generateSprite(newID)
-                            );
-                            break;
-                        case -3: // Sprite Removing
-                            SpriteManager.ACTIVE_SPRITES.remove(data.readInt());
-                            break;
-                        default:
-                            LOGGER.error("Handling GUIHanger Network Packet");
-                            return;
+                int id = data.readVarInt();
+                if (SpriteManager.ACTIVE_SPRITES.containsKey(id)) {
+                    // Operating on sprite with the ID read.
+                    boolean success = SpriteManager.ACTIVE_SPRITES.get(id).readPacketBytes(data);
+                    if (!success) {
+                        LOGGER.error("Error handling data on " + SpriteManager.ACTIVE_SPRITES.get(id).getSpriteName() + "@" + id);
+                        return;
                     }
                 } else {
-                    if (SpriteManager.ACTIVE_SPRITES.containsKey(id)) {
-                        // Operating on sprite with the ID read.
-                        SpriteManager.ACTIVE_SPRITES.get(id).readPacketBytes(data);
-                    } else {
-                        if (data.readByte() == SpriteProperty.ID_CREATE) {
-                            int newID = data.readVarInt();
-                            SpriteManager.ACTIVE_SPRITES.put(
-                                    newID,
-                                    SpriteType.values()[data.readUnsignedByte()].generateSprite(newID)
-                            );
+                    if (data.readUnsignedByte() == SpriteProperty.PropertyType.CREATE.ordinal()) {
+                        BaseSprite newSprite = SpriteType.values()[data.readUnsignedByte()].generateSprite(id);
+                        SpriteManager.ACTIVE_SPRITES.put(id, newSprite);
+                        boolean success = newSprite.readPacketBytes(data);
+                        if (!success) {
+                            LOGGER.error("Error handling data on " + newSprite.getSpriteName() + "@" + id);
+                            return;
                         }
+                    } else {
+                        return;
                     }
                 }
             } catch (IndexOutOfBoundsException e) {
