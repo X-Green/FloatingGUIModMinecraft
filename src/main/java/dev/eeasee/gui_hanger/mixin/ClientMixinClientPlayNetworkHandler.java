@@ -16,7 +16,7 @@ public abstract class ClientMixinClientPlayNetworkHandler {
     @Inject(method = "onCustomPayload", at = @At("HEAD"), cancellable = true)
     private void onOnCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
         if (GUIHangerClient.HUD_HANGER_CHANNEL.equals(packet.getChannel())) {
-            GUIHangerClientNetworkHandler.handleData(packet.getData());
+            GUIHangerClientNetworkHandler.handleData(packet.getData(), (ClientPlayNetworkHandler) (Object) this);
             ci.cancel();
         }
     }

@@ -31,6 +31,7 @@ public abstract class ContainerSprite extends BaseSprite {
     static {
         PROPERTIES.add(SpriteProperty.PropertyType.ADD_ITEM);
         PROPERTIES.add(SpriteProperty.PropertyType.REMOVE_ITEM);
+        PROPERTIES.add(SpriteProperty.PropertyType.SET_ITEMS);
     }
 
     private final Int2ObjectMap<Item> items = new Int2ObjectOpenHashMap<>();

@@ -65,8 +65,17 @@ public class AnvilSprite extends ContainerSprite {
         this.displayItemName = itemName;
     }
 
+    @Nullable
+    public String getAnvilItemNameDisplay() {
+        return this.displayItemName;
+    }
+
     public void setCanFixItem(boolean b) {
         this.canFixItem = b;
+    }
+
+    public boolean getCanFixItem() {
+        return this.canFixItem;
     }
 
     public EnumSet<SpriteProperty.PropertyType> getProperties() {
@@ -87,6 +96,11 @@ public class AnvilSprite extends ContainerSprite {
     @Override
     public String getSpriteName() {
         return "AnvilSprite";
+    }
+
+    @Override
+    public SpriteType getType() {
+        return SpriteType.ANVIL;
     }
 
     @Override

@@ -1,23 +1,19 @@
 package dev.eeasee.gui_hanger;
 
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.eeasee.gui_hanger.network.GUIHangerClient;
 import dev.eeasee.gui_hanger.sprites.SpriteProperty;
-import dev.eeasee.gui_hanger.sprites.SpriteType;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.command.arguments.Vec3ArgumentType;
-import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.Pair;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.LogManager;
@@ -45,8 +41,8 @@ public class GUIHangerMod implements ModInitializer {
 
                         packetByteBuf.writeVarInt(0);
 
-                        SpriteProperty.POSITION.writePacketBytes(new Vector3f((float) vec3d.x, (float) vec3d.y, (float) vec3d.z), packetByteBuf);
-                        SpriteProperty.YAW_PITCH.writePacketBytes(new Vec2f(playerEntity.yaw, playerEntity.pitch), packetByteBuf);
+                        SpriteProperty.POSITION.write(new Vector3f((float) vec3d.x, (float) vec3d.y, (float) vec3d.z), packetByteBuf);
+                        SpriteProperty.YAW_PITCH.write(new Vec2f(playerEntity.yaw, playerEntity.pitch), packetByteBuf);
                         SpriteProperty.PropertyType.NULL.writeOrdinalToPacket(packetByteBuf);
 
                         packetByteBuf.writeVarInt(-1);
@@ -66,8 +62,8 @@ public class GUIHangerMod implements ModInitializer {
 
                                 packetByteBuf.writeInt(0);
 
-                                SpriteProperty.POSITION.writePacketBytes(new Vector3f((float) vec3d.x, (float) vec3d.y, (float) vec3d.z), packetByteBuf);
-                                SpriteProperty.YAW_PITCH.writePacketBytes(new Vec2f(0, 0), packetByteBuf);
+                                SpriteProperty.POSITION.write(new Vector3f((float) vec3d.x, (float) vec3d.y, (float) vec3d.z), packetByteBuf);
+                                SpriteProperty.YAW_PITCH.write(new Vec2f(0, 0), packetByteBuf);
                                 SpriteProperty.PropertyType.NULL.writeOrdinalToPacket(packetByteBuf);
 
                                 packetByteBuf.writeInt(-1);

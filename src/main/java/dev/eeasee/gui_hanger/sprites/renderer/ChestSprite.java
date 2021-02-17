@@ -41,6 +41,11 @@ public class ChestSprite extends ContainerSprite {
     }
 
     @Override
+    public SpriteType getType() {
+        return SpriteType.CHEST;
+    }
+
+    @Override
     public Vec2i getItemCoordinate(int itemIndex) {
         if (itemIndex < 0) {
             return null;

@@ -2,24 +2,17 @@ package dev.eeasee.gui_hanger.sprites.renderer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import dev.eeasee.gui_hanger.GUIHangerMod;
 import dev.eeasee.gui_hanger.config.Configs;
 import dev.eeasee.gui_hanger.sprites.SpriteProperty;
 import dev.eeasee.gui_hanger.sprites.SpriteType;
 import dev.eeasee.gui_hanger.util.QuadVec2f;
 import dev.eeasee.gui_hanger.util.QuadVec4f;
 import dev.eeasee.gui_hanger.util.Vec2i;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.Pair;
@@ -31,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +75,7 @@ public abstract class BaseSprite {
         this.type = type;
     }
 
-    public boolean readPacketBytes(PacketByteBuf byteBuf) {
+    public boolean readPacket(PacketByteBuf byteBuf) {
         while (true) {
             int propertyID = byteBuf.readUnsignedByte();
             if (propertyID == SpriteProperty.PropertyType.DESTROY.ordinal()) {
@@ -95,14 +87,30 @@ public abstract class BaseSprite {
             }
             try {
                 SpriteProperty.PropertyType propertyType = SpriteProperty.PropertyType.values()[propertyID];
-                SpriteProperty.getPropertyByType(propertyType).readPacketBytes(this, byteBuf);
+                SpriteProperty.getPropertyByType(propertyType).readPacketBytesToSprite(this, byteBuf);
             } catch (ClassCastException e) {
                 return false;
             }
         }
     }
 
-    protected void destroy() {
+    public void writePacket(PacketByteBuf byteBuf) {
+        for (SpriteProperty.PropertyType propertyType : this.getProperties()) {
+            if (propertyType.initial) {
+                SpriteProperty.getPropertyByType(propertyType).writePacketBytesFromSprite(this, byteBuf);
+            }
+        }
+        byteBuf.writeByte(SpriteProperty.PropertyType.NULL.ordinal());
+    }
+
+    public void writeCreatePacket(int id, PacketByteBuf byteBuf) {
+        byteBuf.writeVarInt(id);
+        byteBuf.writeByte(SpriteProperty.PropertyType.CREATE.ordinal());
+        byteBuf.writeByte(this.getType().ordinal());
+        this.writePacket(byteBuf);
+    }
+
+    private void destroy() {
 
     }
 
@@ -146,6 +154,8 @@ public abstract class BaseSprite {
     protected abstract int getHeight();
 
     public abstract String getSpriteName();
+
+    public abstract SpriteType getType();
 
     public int getID() {
         return this.id;

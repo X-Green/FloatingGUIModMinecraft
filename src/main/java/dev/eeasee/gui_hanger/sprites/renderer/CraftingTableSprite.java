@@ -44,6 +44,11 @@ public class CraftingTableSprite extends ContainerSprite {
     }
 
     @Override
+    public SpriteType getType() {
+        return SpriteType.CRAFTING_TABLE;
+    }
+
+    @Override
     public Vec2i getItemCoordinate(int itemIndex) {
         if (itemIndex < 0) {
             return null;

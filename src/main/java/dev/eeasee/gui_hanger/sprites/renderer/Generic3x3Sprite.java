@@ -47,6 +47,10 @@ public class Generic3x3Sprite extends ContainerSprite {
         this.container3x3Type = type;
     }
 
+    public byte get3x3ContainerType() {
+        return this.container3x3Type;
+    }
+
     public EnumSet<SpriteProperty.PropertyType> getProperties() {
         return PROPERTIES;
     }
@@ -71,6 +75,11 @@ public class Generic3x3Sprite extends ContainerSprite {
             default:
                 return "Generic3x3Sprite";
         }
+    }
+
+    @Override
+    public SpriteType getType() {
+        return SpriteType.GENERIC_3X3;
     }
 
     @Override

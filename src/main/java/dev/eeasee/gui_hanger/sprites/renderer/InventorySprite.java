@@ -43,6 +43,11 @@ public class InventorySprite extends ContainerSprite {
     }
 
     @Override
+    public SpriteType getType() {
+        return SpriteType.INVENTORY;
+    }
+
+    @Override
     public Vec2i getItemCoordinate(int itemIndex) {
         if (itemIndex < 0) {
             return null;
