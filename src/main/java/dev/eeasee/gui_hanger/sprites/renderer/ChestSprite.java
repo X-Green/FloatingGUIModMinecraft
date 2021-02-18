@@ -21,6 +21,7 @@ public class ChestSprite extends ContainerSprite {
             (float) WIDTH / 256.0f, 0,
             0, 0
     );
+
     public ChestSprite(int id) {
         super(id, SpriteType.CHEST);
     }

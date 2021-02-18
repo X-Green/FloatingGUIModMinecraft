@@ -7,29 +7,21 @@ import dev.eeasee.gui_hanger.sprites.SpriteType;
 import dev.eeasee.gui_hanger.sprites.renderer.AnvilSprite;
 import dev.eeasee.gui_hanger.sprites.renderer.BaseSprite;
 import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.Items;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.Pair;
-import net.minecraft.util.math.Vec2f;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 public class GUIHangerServerNetworkHandler {
     private static final Logger LOGGER = LogManager.getLogger();
-    private Set<UUID> validPlayers = new HashSet<>();
 
     private final MinecraftServer minecraftServer;
     private final GUIHangerServer guiHangerServer;
@@ -60,13 +52,6 @@ public class GUIHangerServerNetworkHandler {
         playerEntity.networkHandler.sendPacket(new CustomPayloadS2CPacket(
                 GUIHangerClient.HUD_HANGER_CHANNEL, buffer
         ));
-    }
-
-    private void onHello(ServerPlayerEntity playerEntity, PacketByteBuf packetData) {
-        this.syncExistingSprites(playerEntity);
-        this.guiHangerServer.player2SpritesMap.put(playerEntity.getUuid(), new Int2ObjectOpenHashMap<>());
-        GUIHangerMod.LOGGER.info(playerEntity.getEntityName() + " logged in with a GUIHanger Client");
-
         AnvilSprite anvilSprite = new AnvilSprite(0);
         anvilSprite.setPos(new Vector3f(-60, 82, -216));
         anvilSprite.setItem(0, Items.WOODEN_SWORD);
@@ -85,77 +70,75 @@ public class GUIHangerServerNetworkHandler {
         anvilSprite.setItem(40, Items.COOKED_BEEF);
         anvilSprite.setItem(41, Items.GUNPOWDER);
         anvilSprite.setCanFixItem(false);
+    }
 
-        PacketByteBuf packetByteBuf = new PacketByteBuf(Unpooled.buffer());
-        packetByteBuf.writeByte(GUIHangerClient.DATA);
-        anvilSprite.writeCreatePacket(0, packetByteBuf);
-        packetByteBuf.writeVarInt(-1);
-
-        playerEntity.networkHandler.sendPacket(new CustomPayloadS2CPacket(GUIHangerClient.HUD_HANGER_CHANNEL, packetByteBuf));
+    private void onHello(ServerPlayerEntity playerEntity, PacketByteBuf packetData) {
+        this.syncExistingSprites(playerEntity);
+        this.guiHangerServer.addPlayer(playerEntity.getUuid());
+        GUIHangerMod.LOGGER.info(playerEntity.getEntityName() + " logged in with a GUIHanger Client");
     }
 
     private void syncExistingSprites(ServerPlayerEntity playerEntity) {
-        for (Int2ObjectMap<BaseSprite> spriteMap : this.guiHangerServer.player2SpritesMap.values()) {
-            for (BaseSprite sprite : spriteMap.values()) {
-
-            }
+        PacketByteBuf packetByteBuf = new PacketByteBuf(Unpooled.buffer());
+        packetByteBuf.writeByte(GUIHangerClient.DATA);
+        for (BaseSprite sprite : this.guiHangerServer.getAllSpriteObjects()) {
+            sprite.writeCreatePacket(sprite.getID(), packetByteBuf);
         }
+
+        packetByteBuf.writeVarInt(-1);
+        playerEntity.networkHandler.sendPacket(new CustomPayloadS2CPacket(GUIHangerClient.HUD_HANGER_CHANNEL, packetByteBuf));
     }
 
     private void onClientData(ServerPlayerEntity player, PacketByteBuf data) {
-        /*
         while (true) {
             try {
                 int id = data.readVarInt();
-                if (SpriteManager.ACTIVE_SPRITES.containsKey(id)) {
+
+                if (id < 0) {
+                    // allocate ID
+                    continue;
+                }
+
+                if (this.guiHangerServer.getSpriteIDsFromPlayer(player.getUuid()).contains(id)) {
                     // Operating on sprite with the ID read.
                     boolean success = SpriteManager.ACTIVE_SPRITES.get(id).readPacket(data);
                     if (!success) {
                         LOGGER.error("Error handling data on " + SpriteManager.ACTIVE_SPRITES.get(id).getSpriteName() + "@" + id);
                         return;
                     }
-                } else {
-                    if (data.readUnsignedByte() == SpriteProperty.PropertyType.CREATE.ordinal()) {
-                        BaseSprite newSprite = SpriteType.values()[data.readUnsignedByte()].generateSprite(id);
-                        SpriteManager.ACTIVE_SPRITES.put(id, newSprite);
-                        boolean success = newSprite.readPacket(data);
-                        if (!success) {
-                            LOGGER.error("Error handling data on " + newSprite.getSpriteName() + "@" + id);
-                            return;
-                        }
-                    } else {
+                } else if (data.readUnsignedByte() == SpriteProperty.PropertyType.CREATE.ordinal()) {
+                    BaseSprite newSprite = SpriteType.values()[data.readUnsignedByte()].generateSprite(id);
+                    SpriteManager.ACTIVE_SPRITES.put(id, newSprite);
+                    boolean success = newSprite.readPacket(data);
+                    if (!success) {
+                        LOGGER.error("Error handling data on " + newSprite.getSpriteName() + "@" + id);
                         return;
                     }
+                } else {
+                    return;
                 }
             } catch (IndexOutOfBoundsException e) {
                 return;
             }
         }
-         */
     }
 
 
     public void onPlayerLoggedOut(ServerPlayerEntity player) {
-        this.guiHangerServer.player2SpritesMap.remove(player.getUuid());
+        if (this.guiHangerServer.containsPlayer(player.getUuid())) {
+            this.guiHangerServer.removePlayer(player.getUuid());
+        }
     }
 
-    public void close() {
-        this.guiHangerServer.player2SpritesMap.clear();
-    }
-
-    public boolean isValidPlayer(ServerPlayerEntity player) {
-        return this.guiHangerServer.player2SpritesMap.containsKey(player.getUuid());
-    }
 
     public void sendToAllValidPlayers(Packet<ClientPlayPacketListener> packet) {
-        PlayerManager manager = this.minecraftServer.getPlayerManager();
-        for (UUID uuid : this.guiHangerServer.player2SpritesMap.keySet()) {
-            ServerPlayerEntity playerEntity = manager.getPlayer(uuid);
-            if (playerEntity == null) {
-                this.guiHangerServer.player2SpritesMap.remove(uuid);
-                continue;
+        for (UUID uuid : this.guiHangerServer.getAvailablePlayerUUIDs()) {
+            ServerPlayerEntity player = this.minecraftServer.getPlayerManager().getPlayer(uuid);
+            if (player == null) {
+                this.guiHangerServer.removePlayer(uuid);
+            } else {
+                player.networkHandler.sendPacket(packet);
             }
-            playerEntity.networkHandler.sendPacket(packet);
         }
     }
 }

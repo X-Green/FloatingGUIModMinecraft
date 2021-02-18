@@ -288,10 +288,11 @@ public abstract class BaseSprite {
         }
         this.rotation = Vector3f.NEGATIVE_Y.getDegreesQuaternion(this.getYaw());
         rotation.hamiltonProduct(Vector3f.POSITIVE_X.getDegreesQuaternion(this.getPitch()));
-        rotation.hamiltonProduct(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0f));
+        // rotation.hamiltonProduct(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0f));
         Vector3f pos = this.getPos();
         this.transformer = Matrix4f.translate(pos.getX(), pos.getY(), pos.getZ());
         this.transformer.multiply(this.getRotation());
+        this.transformer.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180.0f));
         this.transformer.multiply(SCALE_MATRIX);
 
         this.isChanged = false;

@@ -101,7 +101,9 @@ public abstract class ClientMixinWorldRenderer {
         RenderSystem.enablePolygonOffset();
         RenderSystem.enableAlphaTest();
         RenderSystem.disableCull();
-
+        {
+            RenderSystem.shadeModel(7425);
+        }
         SpriteManager.renderFlat(matrices, tickDelta, camera, gameRenderer, this.textureManager);
 
         RenderSystem.enableCull();

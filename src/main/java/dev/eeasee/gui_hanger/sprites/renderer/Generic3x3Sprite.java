@@ -1,13 +1,11 @@
 package dev.eeasee.gui_hanger.sprites.renderer;
 
-import dev.eeasee.gui_hanger.GUIHangerMod;
 import dev.eeasee.gui_hanger.sprites.SpriteProperty;
 import dev.eeasee.gui_hanger.sprites.SpriteType;
 import dev.eeasee.gui_hanger.util.QuadVec2f;
 import dev.eeasee.gui_hanger.util.QuadVec4f;
 import dev.eeasee.gui_hanger.util.Vec2i;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 

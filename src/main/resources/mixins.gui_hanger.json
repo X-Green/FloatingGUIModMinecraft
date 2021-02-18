@@ -4,6 +4,7 @@
   "package": "dev.eeasee.gui_hanger.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinCommandManager",
     "MixinCustomPayloadC2SPacket",
     "MixinMinecraftServer",
     "MixinPlayerManager",

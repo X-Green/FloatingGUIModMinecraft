@@ -1,10 +1,6 @@
 package dev.eeasee.gui_hanger.network;
 
-import dev.eeasee.gui_hanger.sprites.SpriteManager;
-import dev.eeasee.gui_hanger.sprites.renderer.AnvilSprite;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 public class GUIHangerClient {

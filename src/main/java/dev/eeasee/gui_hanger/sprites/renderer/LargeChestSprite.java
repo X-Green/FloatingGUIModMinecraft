@@ -22,6 +22,7 @@ public class LargeChestSprite extends ContainerSprite {
             (float) WIDTH / 256.0f, 0,
             0, 0
     );
+
     public LargeChestSprite(int id) {
         super(id, SpriteType.LARGE_CHEST);
     }
@@ -85,4 +86,5 @@ public class LargeChestSprite extends ContainerSprite {
     @Override
     public @NotNull List<Triple<QuadVec4f, Identifier, QuadVec2f>> putWidgetsRendering(float tickDelta) {
         return Collections.emptyList();
-    }}
+    }
+}

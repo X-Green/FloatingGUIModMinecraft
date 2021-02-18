@@ -1,13 +1,11 @@
 package dev.eeasee.gui_hanger.network;
 
+import dev.eeasee.gui_hanger.sprites.SpriteManager;
 import dev.eeasee.gui_hanger.sprites.SpriteProperty;
 import dev.eeasee.gui_hanger.sprites.SpriteType;
-import dev.eeasee.gui_hanger.sprites.SpriteManager;
 import dev.eeasee.gui_hanger.sprites.renderer.BaseSprite;
 import io.netty.buffer.Unpooled;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.PacketByteBuf;
 import org.apache.logging.log4j.LogManager;
@@ -73,9 +71,5 @@ public class GUIHangerClientNetworkHandler {
                 return;
             }
         }
-    }
-
-    private static void verifySprite(int id) {
-        //todo: ask the server to send the sprite again.
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector4f;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Pair;
@@ -71,7 +72,12 @@ public abstract class ContainerSprite extends BaseSprite {
             if (vec2i == null) {
                 continue;
             }
-            Matrix4f matrix4f = Matrix4f.translate(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f * Configs.hungScreenScale * (((IItem) item).getIsBlockItem() ? 1 : 0.15f));
+            // Matrix4f matrix4f = Matrix4f.translate(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f * Configs.hungScreenScale * (((IItem) item).getIsBlockItem() ? 1 : 0.15f));
+            //todo: simplify this
+            Vector4f vector4f = new Vector4f(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f * Configs.hungScreenScale * (((IItem) item).getIsBlockItem() ? 1 : 0.15f), 0);
+            vector4f.rotate(this.getRotation());
+            Matrix4f matrix4f = Matrix4f.translate(vector4f.getX(), vector4f.getY(), vector4f.getZ());
+
             result.add(new Pair<>(matrix4f, item.getStackForRender()));
         }
         return result;
