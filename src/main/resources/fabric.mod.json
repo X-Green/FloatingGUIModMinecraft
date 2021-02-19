@@ -18,7 +18,7 @@
       "dev.eeasee.gui_hanger.GUIHangerMod"
     ],
     "modmenu": [
-      "dev.eeasee.gui_hanger.compat.modmenu.GUIHangerModMenuImpl"
+      "dev.eeasee.gui_hanger.config.ModMenuImpl"
     ]
   },
   "mixins": [

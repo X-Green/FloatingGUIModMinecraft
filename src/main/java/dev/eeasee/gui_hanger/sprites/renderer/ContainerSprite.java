@@ -74,7 +74,7 @@ public abstract class ContainerSprite extends BaseSprite {
             }
             // Matrix4f matrix4f = Matrix4f.translate(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f * Configs.hungScreenScale * (((IItem) item).getIsBlockItem() ? 1 : 0.15f));
             //todo: simplify this
-            Vector4f vector4f = new Vector4f(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f * Configs.hungScreenScale * (((IItem) item).getIsBlockItem() ? 1 : 0.15f), 0);
+            Vector4f vector4f = new Vector4f(vec2i.x * SCALE_NUM, vec2i.y * SCALE_NUM, -0.07f * Configs.hangedGUIScale * (((IItem) item).getIsBlockItem() ? 1 : 0.15f), 0);
             vector4f.rotate(this.getRotation());
             Matrix4f matrix4f = Matrix4f.translate(vector4f.getX(), vector4f.getY(), vector4f.getZ());
 

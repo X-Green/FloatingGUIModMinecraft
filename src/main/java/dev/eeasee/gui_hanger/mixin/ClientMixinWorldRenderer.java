@@ -66,6 +66,7 @@ public abstract class ClientMixinWorldRenderer {
         cameraTransformer.multiply(commonTransformer);
         origin.multiply(cameraTransformer);
 
+        /*
         matrices.push();
 
         matrices.peek().getModel().multiply(origin);
@@ -83,6 +84,7 @@ public abstract class ClientMixinWorldRenderer {
         );
 
         matrices.pop();
+         */
 
         SpriteManager.renderModels(matrices, tickDelta, camera, gameRenderer, this.textureManager, this.bufferBuilders);
 
@@ -102,7 +104,7 @@ public abstract class ClientMixinWorldRenderer {
         RenderSystem.enableAlphaTest();
         RenderSystem.disableCull();
         {
-            RenderSystem.shadeModel(7425);
+            // RenderSystem.shadeModel(7425);
         }
         SpriteManager.renderFlat(matrices, tickDelta, camera, gameRenderer, this.textureManager);
 

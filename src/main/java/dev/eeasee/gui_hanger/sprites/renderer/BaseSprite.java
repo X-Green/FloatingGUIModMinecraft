@@ -38,7 +38,7 @@ public abstract class BaseSprite {
             0, 0
     );
 
-    public static final float SCALE_NUM = Configs.hungScreenScale * 2.5f / 256.0f;
+    public static float SCALE_NUM = Configs.hangedGUIScale * 2.5f / 256.0f;
     public static Matrix4f SCALE_MATRIX = Matrix4f.scale(SCALE_NUM, SCALE_NUM, SCALE_NUM);
     public static Matrix4f ITEM_SCALE = Matrix4f.scale(14, 14, 14);
 
@@ -147,6 +147,10 @@ public abstract class BaseSprite {
             this.yaw = yaw;
             this.pitch = pitch;
         }
+    }
+
+    public void setChanged() {
+        this.isChanged = true;
     }
 
     protected abstract int getWidth();
